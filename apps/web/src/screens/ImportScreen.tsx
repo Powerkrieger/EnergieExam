@@ -8,11 +8,12 @@ const BAFA_URL =
 const EXPECTED = ["WG-1", "WG-2", "WG-3", "NWG-1", "NWG-2", "NWG-3"];
 
 export function ImportScreen() {
-  const { catalogs, formulas, importPdfs } = useStore();
+  const { catalogs, formulas, importPdfs, settings, updateSettings } = useStore();
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<ImportProgress | null>(null);
   const [results, setResults] = useState<ImportResult[]>([]);
   const have = new Set(catalogs.map((c) => c.id));
+  const missing = [...EXPECTED.filter((id) => !have.has(id)).map(catalogLabel), ...(formulas ? [] : ["Formelsammlung"])];
 
   const onFiles = async (list: FileList | null) => {
     if (!list?.length) return;
@@ -80,10 +81,34 @@ export function ImportScreen() {
           {formulas ? "✓" : "○"} Formelsammlung{formulas && ` (${formulas.entries.length} Formeln)`}
         </li>
       </ul>
-      {catalogs.length > 0 && (
-        <a className="button primary" href={href("")}>
-          Zum Lernen
-        </a>
+      {catalogs.length > 0 && !busy && (
+        <section className="card next-step">
+          {missing.length > 0 && (
+            <p>
+              Es fehlen noch: <strong>{missing.join(", ")}</strong>. Laden Sie diese PDFs ebenfalls herunter und wählen Sie
+              sie oben aus – oder machen Sie ohne sie weiter.
+            </p>
+          )}
+          {settings.reviewMode ? (
+            <a className="button primary" href={href("review")}>
+              Weiter zur Prüfung der Antworten
+            </a>
+          ) : (
+            <div className="buttons">
+              <a className="button primary" href={href("")}>
+                Zum Lernen
+              </a>
+              <button
+                onClick={() => {
+                  updateSettings({ reviewMode: true });
+                  navigate("review");
+                }}
+              >
+                Antworten als Fachperson prüfen
+              </button>
+            </div>
+          )}
+        </section>
       )}
       <p className="muted small">
         Hinweis: Die Inhalte gehören dem BAFA und dürfen nicht verändert oder vervielfältigt werden. Diese App liest

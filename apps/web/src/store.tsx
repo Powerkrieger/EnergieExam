@@ -16,6 +16,7 @@ import { createContext, type ReactNode, useCallback, useContext, useEffect, useM
 import bundled from "../../../annotations/annotations.json";
 import * as db from "./db.ts";
 import { forgetDocs, openPdf, pdfjs } from "./pdf.ts";
+import { reviewPriority } from "./selection.ts";
 
 export const FORMULA_DOC = "formeln";
 
@@ -46,6 +47,10 @@ interface Store extends Data {
   docOf: (key: string) => db.DocId;
   /** Review data: bundled file plus local changes. */
   annotations: Record<string, QuestionAnnotation>;
+  /** reviewPriority of the imported question, regardless of later reviews. */
+  priorityOf: (key: string) => number;
+  /** Local reviews changed since the last export. */
+  unexported: number;
   importPdfs(files: File[], onProgress: (p: ImportProgress) => void): Promise<ImportResult[]>;
   record(key: string, right: boolean): void;
   setReview(key: string, a: QuestionAnnotation | null): void;
@@ -75,10 +80,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!data) return null;
     const annotations = mergeAnnotations(bundledAnnotations, data.reviews);
     const docs = new Map<string, db.DocId>();
+    const priorities = new Map<string, number>();
     const questions: AnnotatedQuestion[] = [];
     for (const { id, catalog } of data.catalogs.sort((a, b) => a.id.localeCompare(b.id))) {
       for (const q of catalog.questions) {
         docs.set(q.key, id);
+        priorities.set(q.key, reviewPriority(q));
         questions.push(applyAnnotation(q, annotations[q.key]));
       }
     }
@@ -89,6 +96,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       byKey: new Map(questions.map((q) => [q.key, q])),
       docOf: (key) => docs.get(key) ?? "",
       annotations,
+      priorityOf: (key) => priorities.get(key) ?? 0,
+      unexported: Object.values(data.reviews).filter((a) => Date.parse(a.reviewedAt ?? "") > (data.settings.exportedAt ?? 0))
+        .length,
 
       async importPdfs(files, onProgress) {
         const results: ImportResult[] = [];

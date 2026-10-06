@@ -8,6 +8,7 @@ import {
   suggestFormulas,
 } from "@exam/core";
 import { useMemo, useState } from "react";
+import { resolved } from "../selection.ts";
 import { useStore } from "../store.tsx";
 import { FormulaCard } from "./FormulaCard.tsx";
 import { RichText } from "./RichText.tsx";
@@ -54,6 +55,7 @@ export function ReviewPanel({ question: q }: { question: AnnotatedQuestion }) {
   return (
     <section className="review">
       <h3>Prüfung durch Fachperson</h3>
+      <p className={`instruction ${base.status ? "saved" : ""}`}>{instruction(q, base)}</p>
       {saved && saved.hash !== q.hash && (
         <p className="warn">Eine frühere Prüfung bezog sich auf eine ältere Fassung dieser Frage und wird ignoriert.</p>
       )}
@@ -98,6 +100,7 @@ export function ReviewPanel({ question: q }: { question: AnnotatedQuestion }) {
           <button
             key={s}
             className={base.status === s ? `selected ${s}` : ""}
+            disabled={s === "confirmed" && !resolved(q)}
             onClick={() => save({ status: s, ...(s === "confirmed" && i.kind !== "open" && { answer: current }) })}
           >
             {STATUS[s]}
@@ -182,6 +185,26 @@ export function ReviewPanel({ question: q }: { question: AnnotatedQuestion }) {
       )}
     </section>
   );
+}
+
+/** What the reviewer should do with this question right now. */
+function instruction(q: AnnotatedQuestion, a: QuestionAnnotation): string {
+  const next = "Danach weiter zur nächsten Frage.";
+  switch (a.status) {
+    case "confirmed":
+      return `✓ Gespeichert. Falls es eine Rechenaufgabe ist, ordnen Sie bitte unten noch die passende Formel zu. ${next}`;
+    case "wrong":
+      return a.answer || a.note?.trim()
+        ? `✓ Gespeichert. ${next}`
+        : "Bitte tragen Sie über „Richtige Antwort korrigieren …“ die richtige Antwort ein oder beschreiben Sie den Fehler in der Anmerkung.";
+    case "unclear":
+      return `✓ Gespeichert. Notieren Sie gern kurz in der Anmerkung, was unklar ist. ${next}`;
+  }
+  if (q.interaction.kind === "open") return "Offene Frage: Passt die Musterlösung? Tippen Sie auf ✓ Stimmt, ✗ Fehler oder ? Unklar.";
+  if (!resolved(q)) {
+    return "Die App hat hier keine richtige Antwort gefunden. Bitte tippen Sie auf „Richtige Antwort korrigieren …“ und tragen Sie sie ein. Wenn Sie es nicht beurteilen können: „? Unklar“.";
+  }
+  return "Stimmt die hinterlegte richtige Antwort? Tippen Sie auf ✓ Stimmt, ✗ Fehler oder ? Unklar.";
 }
 
 /** The answer key as currently in effect, in annotation form. */

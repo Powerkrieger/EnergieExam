@@ -17,37 +17,29 @@ brauchen wir den Blick einer Fachperson.
 3. Zurück in der App **„PDFs auswählen …“** und alle heruntergeladenen PDFs auswählen.
    Der Import dauert etwa eine Minute.
 
-## 3. Prüfmodus einschalten
+## 3. Prüfen – die App führt dich
 
-Oben rechts **⚙ → „Prüfmodus für Fachleute“** einschalten. Auf der Startseite
-erscheint dann **„Prüfung der Antworten“**.
+Nach dem Import auf **„Antworten als Fachperson prüfen“** tippen. Ab dann zeigt dir
+die App oben auf der Startseite immer den nächsten Schritt mit einem Knopf dafür:
 
-## 4. Prüfen
+1. **Unsichere Fragen** (rund 130) – bei etwa 100 hat die App keine richtige Antwort
+   gefunden, bei etwa 30 ist sie unsicher. Das ist der eigentliche Auftrag.
+2. **Stichprobe** – 20 zufällige Fragen, deren Antwort die App für sicher hält.
+3. **Ergebnisse zurückschicken** – ein Knopf, dann die Datei per Messenger oder
+   E-Mail an mich schicken.
 
-**Du musst nicht alle ~1300 Fragen prüfen.** Wichtig sind nur rund 130:
+Danach steht dort **„✓ Fertig – vielen Dank!“**. **Die übrigen ~1170 Fragen musst
+du nicht prüfen.**
 
-- **„Unsichere Fragen“** – bei etwa 100 davon konnte die App gar keine richtige
-  Antwort finden, bei weiteren etwa 30 ist sie unsicher. Die Zahl in Klammern zeigt,
-  wie viele noch offen sind. Das ist der eigentliche Auftrag.
-- **„Stichprobe: 20 zufällige“** – optional. 20 Fragen, deren Antwort die App
-  ziemlich sicher erkannt hat. Findest du dort keine Fehler, reicht das.
+Bei jeder Frage steht im gestrichelten Kasten unten, was zu tun ist:
 
-Die Liste nach Katalog hilft, die Arbeit in Portionen aufzuteilen (z. B. ein Katalog
-pro Abend). Unter jeder Frage steht ein gestrichelter Kasten:
+- **✓ Stimmt** – die hinterlegte Antwort ist richtig.
+- **✗ Fehler** – dann bitte **„Richtige Antwort korrigieren …“** und/oder eine
+  **Anmerkung** schreiben.
+- **? Unklar** – wenn du es nicht beurteilen kannst oder die Frage selbst fehlerhaft ist.
+- **Passende Formeln** – bei Rechenaufgaben gern die Zeile(n) aus der
+  Formelsammlung zuordnen (Vorschläge oder Suche).
 
-- **Hinterlegte richtige Antwort** – das hält die App für richtig.
-- **✓ Stimmt** – Antwort ist richtig.
-- **✗ Fehler** – etwas stimmt nicht. Dann bitte **„Richtige Antwort korrigieren …“**
-  und/oder eine **Anmerkung** schreiben.
-- **? Unklar** – wenn du dir nicht sicher bist oder die Frage selbst fehlerhaft ist.
-- **Passende Formeln** – bei Rechenaufgaben bitte die Zeile(n) aus der
-  Formelsammlung zuordnen, die man braucht (Vorschläge oder Suche).
-
-Mit **„Überspringen →“** geht es zur nächsten Frage. Alles wird sofort gespeichert.
-Jede geprüfte Frage hilft – auch wenn du nicht fertig wirst.
-
-## 5. Ergebnisse zurückschicken
-
-**„Prüfung der Antworten → Prüfergebnisse exportieren“** und die Datei per
-Messenger oder E-Mail zurückschicken. Die Datei enthält nur deine Bewertungen,
-keine BAFA-Inhalte. Du kannst das jederzeit zwischendurch machen.
+Alles wird sofort gespeichert; du kannst jederzeit aufhören und später weitermachen.
+Übersprungene Fragen kommen beim nächsten Mal wieder. Einen Zwischenstand kannst du
+unter **„Prüfung der Antworten → Prüfergebnisse exportieren“** schicken.

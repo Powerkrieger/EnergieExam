@@ -119,6 +119,12 @@ input[type="search"] { width: 100%; margin: 8px 0; }
 
 .review { margin-top: 20px; padding: 12px; border: 2px dashed var(--amber); border-radius: 12px; background: #fffdf7; }
 .review h3 { margin-top: 0; }
+.review .instruction { padding: 8px 10px; border-radius: 8px; background: var(--amber-light); font-weight: 600; }
+.review .instruction.saved { background: var(--green-light); }
+.next-step { border: 2px solid var(--green); }
+.next-step h2 { margin: 0 0 6px; }
+.next-step .step-label { margin: 0; color: var(--green); font-weight: 600; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.04em; }
+.next-step.done { background: var(--green-light); }
 .answer-key { padding-left: 1.4rem; margin: 4px 0; }
 .status button.selected.confirmed { background: var(--green); color: #fff; border-color: var(--green); }
 .status button.selected.wrong { background: var(--red); color: #fff; border-color: var(--red); }

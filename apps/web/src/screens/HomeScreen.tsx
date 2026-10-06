@@ -1,4 +1,5 @@
 import { isDue, isLearned } from "@exam/core";
+import { ReviewNextStep } from "../components/ReviewNextStep.tsx";
 import { href } from "../router.ts";
 import { reviewed } from "../selection.ts";
 import { CATALOG_NAMES, PART_NAMES, useStore } from "../store.tsx";
@@ -11,6 +12,7 @@ export function HomeScreen() {
 
   return (
     <div className="screen">
+      {settings.reviewMode && <ReviewNextStep />}
       {available.length > 1 && (
         <div className="segmented">
           {available.map((c) => (

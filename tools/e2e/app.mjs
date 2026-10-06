@@ -69,12 +69,20 @@ try {
   await shot("07-solution-original");
   step("Abbildungen und Originallösung");
 
-  // Review mode.
-  await page.goto("http://localhost:5198/#/settings");
-  await page.locator(".toggle input").check();
-  await page.goto("http://localhost:5198/#/review");
-  await page.getByText("Stichprobe: 20 zufällige").waitFor();
+  // Review mode, entered and guided the way the reviewer gets there.
+  await page.goto("http://localhost:5198/#/import");
+  await page.getByRole("button", { name: "Antworten als Fachperson prüfen" }).click();
+  await page.getByText("Schritt 1 von 3").waitFor();
   await shot("08-review-overview");
+  await page.getByText("Mit der Prüfung beginnen").click();
+  await page.locator(".review .instruction").waitFor();
+  await shot("08b-review-question");
+  step(`Prüfung, erste Frage: ${await page.locator(".review .instruction").innerText()}`);
+  await page.getByRole("button", { name: "? Unklar" }).click();
+  await page.getByRole("button", { name: "Nächste Frage →" }).click();
+  await page.getByRole("button", { name: "Überspringen →" }).waitFor();
+  await page.goto("http://localhost:5198/#/");
+  step(`Startseite im Prüfmodus: ${(await page.locator(".next-step").innerText()).replace(/\s+/g, " ")}`);
   await page.goto("http://localhost:5198/#/q/WG/1.1.1.06");
   await page.locator(".review").waitFor();
   await page.getByRole("button", { name: "✓ Stimmt" }).click();

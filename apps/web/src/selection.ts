@@ -1,17 +1,20 @@
-import { type AnnotatedQuestion, isDue, type QuestionProgress } from "@exam/core";
+import { type AnnotatedQuestion, isDue, type Question, type QuestionProgress } from "@exam/core";
 
 export type Mode = "due" | "order" | "wrong" | "review";
 export type ReviewFilter = "unsure" | "sample" | "wrong" | "unclear" | "all";
 
-export function resolved(q: AnnotatedQuestion): boolean {
+export function resolved(q: Question): boolean {
   const i = q.interaction;
   if (i.kind === "single") return i.correct !== null;
   if (i.kind === "gaps") return i.gaps.every((g) => (g.kind === "choice" ? g.correct !== null : g.expected !== null));
   return true;
 }
 
-/** How much a question needs an expert's eye: unresolved answers first, heuristic answers next. */
-export function reviewPriority(q: AnnotatedQuestion): number {
+/**
+ * How much an imported question (before annotations) needs an expert's eye:
+ * 3 unresolved, 2 flagged by the importer, 1 heuristic answer, 0 read directly.
+ */
+export function reviewPriority(q: Question): number {
   if (!resolved(q)) return 3;
   if (q.issues.length || q.preferOriginal) return 2;
   const i = q.interaction;
@@ -23,9 +26,33 @@ export function reviewed(q: AnnotatedQuestion): boolean {
   return !!q.annotation?.status && !q.stale;
 }
 
-/** Answers that need an expert: unresolved, or flagged by the importer. Everything else is only spot-checked. */
-export function needsReview(q: AnnotatedQuestion): boolean {
-  return !reviewed(q) && reviewPriority(q) >= 2;
+/** Priority 2+ must be reviewed; of the heuristic answers (priority 1) a sample of this size is enough. */
+export const SAMPLE = 20;
+
+export type ReviewStep =
+  | { kind: "unsure"; open: number; total: number }
+  | { kind: "sample"; done: number }
+  | { kind: "export"; changed: number }
+  | { kind: "done" };
+
+/** What the reviewer should do next: uncertain questions, then the sample, then send the results. */
+export function reviewStep(
+  questions: AnnotatedQuestion[],
+  priority: (key: string) => number,
+  /** Questions reviewed on this device since the last export. */
+  unexported: number,
+): ReviewStep {
+  const must = questions.filter((q) => priority(q.key) >= 2);
+  const open = must.filter((q) => !reviewed(q)).length;
+  if (open > 0) return { kind: "unsure", open, total: must.length };
+  const done = sampleDone(questions, priority);
+  if (done < SAMPLE && questions.some((q) => priority(q.key) === 1 && !reviewed(q))) return { kind: "sample", done };
+  if (unexported > 0) return { kind: "export", changed: unexported };
+  return { kind: "done" };
+}
+
+export function sampleDone(questions: AnnotatedQuestion[], priority: (key: string) => number): number {
+  return questions.filter((q) => priority(q.key) === 1 && reviewed(q)).length;
 }
 
 const SESSION = 20;
@@ -35,7 +62,13 @@ export function selectQuestions(
   all: AnnotatedQuestion[],
   progress: Record<string, QuestionProgress>,
   mode: Mode,
-  filter: { doc?: (key: string) => string; docId?: string; chapter?: string; review?: ReviewFilter },
+  filter: {
+    doc?: (key: string) => string;
+    docId?: string;
+    chapter?: string;
+    review?: ReviewFilter;
+    priority?: (key: string) => number;
+  },
 ): string[] {
   let qs = all;
   if (filter.docId && filter.doc) qs = qs.filter((q) => filter.doc!(q.key) === filter.docId);
@@ -56,10 +89,19 @@ export function selectQuestions(
     case "review": {
       const f = filter.review ?? "unsure";
       if (f === "wrong" || f === "unclear") return qs.filter((q) => !q.stale && q.annotation?.status === f).map((q) => q.key);
+      const priority = filter.priority ?? (() => 0);
       const open = qs.filter((q) => !reviewed(q));
       if (f === "all") return open.map((q) => q.key);
-      if (f === "sample") return shuffle(open.filter((q) => reviewPriority(q) === 1)).slice(0, SESSION).map((q) => q.key);
-      return open.filter(needsReview).sort((a, b) => reviewPriority(b) - reviewPriority(a)).map((q) => q.key);
+      if (f === "sample") {
+        // The rest of the sample, or another full one once it is complete.
+        const done = sampleDone(all, priority);
+        const size = done < SAMPLE ? SAMPLE - done : SAMPLE;
+        return shuffle(open.filter((q) => priority(q.key) === 1)).slice(0, size).map((q) => q.key);
+      }
+      return open
+        .filter((q) => priority(q.key) >= 2)
+        .sort((a, b) => priority(b.key) - priority(a.key))
+        .map((q) => q.key);
     }
   }
 }

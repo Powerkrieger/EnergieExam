@@ -17,6 +17,11 @@ export function SettingsScreen() {
           </span>
         </span>
       </label>
+      {settings.reviewMode && (
+        <a className="button primary" href={href("review")}>
+          Zur Prüfung der Antworten
+        </a>
+      )}
       <div className="buttons">
         <a className="button" href={href("import")}>
           PDFs (neu) importieren

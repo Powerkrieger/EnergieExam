@@ -1,30 +1,22 @@
 import { useRef, useState } from "react";
 import { href } from "../router.ts";
-import { needsReview, reviewed } from "../selection.ts";
+import { ReviewNextStep, useExportReviews } from "../components/ReviewNextStep.tsx";
+import { reviewed } from "../selection.ts";
 import { catalogLabel, useStore } from "../store.tsx";
-import { saveFile } from "../share.ts";
 
 export function ReviewScreen() {
-  const { questions, docOf, catalogs, exportReviews, importReviews } = useStore();
+  const { questions, docOf, catalogs, importReviews, priorityOf } = useStore();
+  const exportReviews = useExportReviews();
   const [message, setMessage] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const done = questions.filter(reviewed);
   const count = (status: string) => done.filter((q) => q.annotation?.status === status).length;
+  const needsReview = (q: (typeof questions)[number]) => !reviewed(q) && priorityOf(q.key) >= 2;
   const unsure = questions.filter(needsReview).length;
   const linked = questions.filter((q) => !q.stale && q.annotation?.formulas?.length).length;
 
-  const exportFile = async () => {
-    const file = exportReviews();
-    const n = Object.keys(file.questions).length;
-    const name = `pruefung-energieberatung-${new Date().toISOString().slice(0, 10)}.json`;
-    try {
-      const how = await saveFile(name, JSON.stringify(file, null, 1));
-      setMessage(`${n} geprüfte Fragen ${how === "shared" ? "geteilt" : "gespeichert"} (${name}).`);
-    } catch {
-      // Share sheet dismissed.
-    }
-  };
+  const exportFile = async () => setMessage(await exportReviews());
 
   const importFile = async (f: File | undefined) => {
     if (!f) return;
@@ -41,9 +33,9 @@ export function ReviewScreen() {
       <h1>Prüfung der Antworten</h1>
       <p>
         Die richtigen Antworten hat die App aus den Musterlösungen des BAFA abgeleitet. Nötig ist nur die Prüfung der
-        unsicheren Fragen; bei allen übrigen genügt eine kleine Stichprobe. Wo sinnvoll, ordnen Sie bitte Formeln aus der
-        Formelsammlung zu.
+        unsicheren Fragen; bei allen übrigen genügt eine kleine Stichprobe. Die App führt Sie Schritt für Schritt:
       </p>
+      <ReviewNextStep />
       <div className="stats">
         <div>
           <strong>{done.length}</strong> von {questions.length} geprüft
@@ -55,9 +47,9 @@ export function ReviewScreen() {
         <div>{unsure} noch unsicher</div>
       </div>
 
-      <h2>Prüfen</h2>
+      <h2>Gezielt prüfen</h2>
       <div className="buttons">
-        <a className="button primary" href={href("learn", { mode: "review", filter: "unsure" })}>
+        <a className="button" href={href("learn", { mode: "review", filter: "unsure" })}>
           Unsichere Fragen ({unsure})
         </a>
         <a className="button" href={href("learn", { mode: "review", filter: "sample" })}>
@@ -94,11 +86,11 @@ export function ReviewScreen() {
 
       <h2>Ergebnisse weitergeben</h2>
       <p className="small">
-        Die Prüfergebnisse enthalten nur Ihre Bewertungen, Korrekturen und Formelzuordnungen – keine BAFA-Inhalte. Senden
-        Sie die Datei an den Entwickler, damit die Korrekturen in die App übernommen werden.
+        Die Prüfergebnisse enthalten nur Ihre Bewertungen, Korrekturen und Formelzuordnungen – keine BAFA-Inhalte. Sie
+        können auch zwischendurch einen Zwischenstand schicken.
       </p>
       <div className="buttons">
-        <button className="primary" onClick={exportFile}>
+        <button onClick={exportFile}>
           Prüfergebnisse exportieren
         </button>
         <button onClick={() => fileInput.current?.click()}>Prüfdatei laden …</button>

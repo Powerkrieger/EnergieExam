@@ -15,6 +15,8 @@ export interface Settings {
   /** Shows the review panel for subject-matter experts. */
   reviewMode: boolean;
   catalog: "WG" | "NWG";
+  /** When review results were last exported (ms). */
+  exportedAt?: number;
 }
 
 interface Schema extends DBSchema {
