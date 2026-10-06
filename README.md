@@ -21,12 +21,38 @@ on their own device. For development, put the PDFs into `private/pdfs/`
 ## Structure
 
 ```
-packages/core        data model (Question, Gap, FormulaEntry …), text helpers
+packages/core        data model, grading, learning progress, review annotations, formula suggestions
 packages/importer    PDF → questions / formula index (pdf.js; runs in browser and Node)
+apps/web             React app (Vite); apps/web/android is the Capacitor Android project
+annotations/         annotations.json: reviewed answers and formula links (our own data, shipped with the app)
+docs/                anleitung-pruefung.md: guide for the expert reviewer (German)
+tools/e2e            app tests in headless Chromium and on an Android emulator (via WebView DevTools)
 tools/browser-smoke  runs the importer in headless Chromium, compares with the Node import
 tools/dev            review helpers (pretty-print, random audit, compare two imports)
-private/             git-ignored: PDFs, imports, golden snapshots
+private/             git-ignored: PDFs, imports, golden snapshots, screenshots
 ```
+
+## App
+
+- **Learning:** overview by catalogue and part, sessions with spaced repetition
+  (Leitner boxes), all questions in order, by chapter, mistakes. Gaps and choices
+  are graded automatically; where the answer key is unknown, the learner compares
+  with the official solution and judges themselves. Figures, the original
+  question and the official solution are rendered from the user's own PDF.
+- **Review mode** (⚙ → Prüfmodus): shows the derived answer key with its source;
+  an expert confirms, corrects, comments and links Formelsammlung rows. Results
+  are exported as a JSON file (share sheet on Android) without BAFA content.
+- **Integrating reviews:** `npm run import -- merge-reviews <file>.json` merges an
+  exported file into `annotations/annotations.json`, which is bundled into the app.
+  Annotations carry the question's content hash and are ignored if BAFA changes the question.
+
+```sh
+npm run dev -w @exam/web                 # web app on http://localhost:5173 (also reachable in the LAN)
+npm run android -w @exam/web             # build APK (needs JAVA_HOME with JDK 21, e.g. ~/android-studio/jbr)
+node tools/e2e/app.mjs                   # end-to-end test in headless Chromium (uses private/pdfs)
+```
+
+The APK ends up in `apps/web/android/app/build/outputs/apk/debug/app-debug.apk`.
 
 ## How the importer works
 

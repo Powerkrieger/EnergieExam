@@ -1,6 +1,6 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
-import type { Catalog, Question } from "@exam/core";
+import { type Catalog, mergeAnnotations, parseAnnotationFile, type Question } from "@exam/core";
 import { detectDocument, importCatalog, importFormulas } from "./index.ts";
 import { extractPage } from "./pdf/page.ts";
 import { nodePdfJs, openPdf } from "./node.ts";
@@ -10,7 +10,8 @@ const USAGE = `Usage:
   node packages/importer/src/cli.ts import <outDir> <pdf>...          write <catalog>-<part>.json per catalogue, formeln.json
   node packages/importer/src/cli.ts report <pdf>... [--verbose]       import and print coverage / issues
   node packages/importer/src/cli.ts show <pdf> <code>...              print imported questions as JSON
-  node packages/importer/src/cli.ts formulas <pdf>                    list the formula collection index`;
+  node packages/importer/src/cli.ts formulas <pdf>                    list the formula collection index
+  node packages/importer/src/cli.ts merge-reviews <file>...           merge exported review files into annotations/annotations.json`;
 
 async function dump(file: string, from = 1, to = Infinity) {
   const doc = await openPdf(file);
@@ -112,6 +113,18 @@ switch (cmd) {
       const q = c.questions.find((q) => q.code === code || q.key.endsWith("/" + code));
       console.log(q ? JSON.stringify(q, null, 1) : `${code}: nicht gefunden`);
     }
+    break;
+  }
+  case "merge-reviews": {
+    // Later files win per question; the bundled file is shipped with the app.
+    const target = join(import.meta.dirname, "../../../annotations/annotations.json");
+    const base = parseAnnotationFile(JSON.parse(await readFile(target, "utf8")));
+    const incoming = await Promise.all(args.map(async (f) => parseAnnotationFile(JSON.parse(await readFile(f, "utf8")))));
+    const questions = mergeAnnotations(base.questions, ...incoming.map((f) => f.questions));
+    const sorted = Object.fromEntries(Object.entries(questions).sort(([a], [b]) => a.localeCompare(b, "de", { numeric: true })));
+    await writeFile(target, JSON.stringify({ ...base, exportedAt: new Date().toISOString(), questions: sorted }, null, 2) + "\n");
+    const counts = incoming.map((f, i) => `${basename(args[i]!)}: ${Object.keys(f.questions).length}`).join(", ");
+    console.log(`${counts} → ${Object.keys(sorted).length} Fragen in annotations/annotations.json`);
     break;
   }
   case "report":
