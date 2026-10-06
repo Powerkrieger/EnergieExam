@@ -73,7 +73,7 @@ try {
   await page.goto("http://localhost:5198/#/settings");
   await page.locator(".toggle input").check();
   await page.goto("http://localhost:5198/#/review");
-  await page.getByText("Unsichere zuerst").waitFor();
+  await page.getByText("Stichprobe: 20 zufällige").waitFor();
   await shot("08-review-overview");
   await page.goto("http://localhost:5198/#/q/WG/1.1.1.06");
   await page.locator(".review").waitFor();

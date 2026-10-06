@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { href } from "../router.ts";
-import { reviewed, reviewPriority } from "../selection.ts";
+import { needsReview, reviewed } from "../selection.ts";
 import { catalogLabel, useStore } from "../store.tsx";
 import { saveFile } from "../share.ts";
 
@@ -11,7 +11,7 @@ export function ReviewScreen() {
 
   const done = questions.filter(reviewed);
   const count = (status: string) => done.filter((q) => q.annotation?.status === status).length;
-  const unsure = questions.filter((q) => !reviewed(q) && reviewPriority(q) >= 2).length;
+  const unsure = questions.filter(needsReview).length;
   const linked = questions.filter((q) => !q.stale && q.annotation?.formulas?.length).length;
 
   const exportFile = async () => {
@@ -40,8 +40,9 @@ export function ReviewScreen() {
     <div className="screen">
       <h1>Prüfung der Antworten</h1>
       <p>
-        Die richtigen Antworten hat die App aus den Musterlösungen des BAFA abgeleitet. Bitte prüfen Sie stichprobenartig
-        – besonders die als unsicher markierten Fragen – und ordnen Sie, wo sinnvoll, Formeln aus der Formelsammlung zu.
+        Die richtigen Antworten hat die App aus den Musterlösungen des BAFA abgeleitet. Nötig ist nur die Prüfung der
+        unsicheren Fragen; bei allen übrigen genügt eine kleine Stichprobe. Wo sinnvoll, ordnen Sie bitte Formeln aus der
+        Formelsammlung zu.
       </p>
       <div className="stats">
         <div>
@@ -57,7 +58,10 @@ export function ReviewScreen() {
       <h2>Prüfen</h2>
       <div className="buttons">
         <a className="button primary" href={href("learn", { mode: "review", filter: "unsure" })}>
-          Unsichere zuerst
+          Unsichere Fragen ({unsure})
+        </a>
+        <a className="button" href={href("learn", { mode: "review", filter: "sample" })}>
+          Stichprobe: 20 zufällige
         </a>
         <a className="button" href={href("learn", { mode: "review", filter: "all" })}>
           Alle ungeprüften der Reihe nach
@@ -81,7 +85,7 @@ export function ReviewScreen() {
             <li key={id}>
               <a href={href("learn", { mode: "review", filter: "unsure", doc: id })}>{catalogLabel(id)}</a>{" "}
               <span className="muted small">
-                {qs.filter(reviewed).length} / {qs.length} geprüft
+                {qs.filter(reviewed).length} / {qs.length} geprüft · {qs.filter(needsReview).length} unsicher
               </span>
             </li>
           );

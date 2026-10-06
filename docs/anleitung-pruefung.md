@@ -24,8 +24,16 @@ erscheint dann **„Prüfung der Antworten“**.
 
 ## 4. Prüfen
 
-Unter **„Prüfung der Antworten → Unsichere zuerst“** kommen die Fragen, bei denen
-die App am unsichersten ist. Unter jeder Frage steht ein gestrichelter Kasten:
+**Du musst nicht alle ~1300 Fragen prüfen.** Wichtig sind nur rund 130:
+
+- **„Unsichere Fragen“** – bei etwa 100 davon konnte die App gar keine richtige
+  Antwort finden, bei weiteren etwa 30 ist sie unsicher. Die Zahl in Klammern zeigt,
+  wie viele noch offen sind. Das ist der eigentliche Auftrag.
+- **„Stichprobe: 20 zufällige“** – optional. 20 Fragen, deren Antwort die App
+  ziemlich sicher erkannt hat. Findest du dort keine Fehler, reicht das.
+
+Die Liste nach Katalog hilft, die Arbeit in Portionen aufzuteilen (z. B. ein Katalog
+pro Abend). Unter jeder Frage steht ein gestrichelter Kasten:
 
 - **Hinterlegte richtige Antwort** – das hält die App für richtig.
 - **✓ Stimmt** – Antwort ist richtig.
@@ -36,7 +44,7 @@ die App am unsichersten ist. Unter jeder Frage steht ein gestrichelter Kasten:
   Formelsammlung zuordnen, die man braucht (Vorschläge oder Suche).
 
 Mit **„Überspringen →“** geht es zur nächsten Frage. Alles wird sofort gespeichert.
-Du musst nicht alles prüfen – jede geprüfte Frage hilft.
+Jede geprüfte Frage hilft – auch wenn du nicht fertig wirst.
 
 ## 5. Ergebnisse zurückschicken
 

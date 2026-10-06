@@ -1,7 +1,7 @@
 import { type AnnotatedQuestion, isDue, type QuestionProgress } from "@exam/core";
 
 export type Mode = "due" | "order" | "wrong" | "review";
-export type ReviewFilter = "unsure" | "wrong" | "unclear" | "all";
+export type ReviewFilter = "unsure" | "sample" | "wrong" | "unclear" | "all";
 
 export function resolved(q: AnnotatedQuestion): boolean {
   const i = q.interaction;
@@ -21,6 +21,11 @@ export function reviewPriority(q: AnnotatedQuestion): number {
 
 export function reviewed(q: AnnotatedQuestion): boolean {
   return !!q.annotation?.status && !q.stale;
+}
+
+/** Answers that need an expert: unresolved, or flagged by the importer. Everything else is only spot-checked. */
+export function needsReview(q: AnnotatedQuestion): boolean {
+  return !reviewed(q) && reviewPriority(q) >= 2;
 }
 
 const SESSION = 20;
@@ -53,7 +58,17 @@ export function selectQuestions(
       if (f === "wrong" || f === "unclear") return qs.filter((q) => !q.stale && q.annotation?.status === f).map((q) => q.key);
       const open = qs.filter((q) => !reviewed(q));
       if (f === "all") return open.map((q) => q.key);
-      return [...open].sort((a, b) => reviewPriority(b) - reviewPriority(a)).map((q) => q.key);
+      if (f === "sample") return shuffle(open.filter((q) => reviewPriority(q) === 1)).slice(0, SESSION).map((q) => q.key);
+      return open.filter(needsReview).sort((a, b) => reviewPriority(b) - reviewPriority(a)).map((q) => q.key);
     }
   }
+}
+
+function shuffle<T>(items: T[]): T[] {
+  const a = [...items];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j]!, a[i]!];
+  }
+  return a;
 }
