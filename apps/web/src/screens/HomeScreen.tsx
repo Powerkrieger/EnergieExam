@@ -1,31 +1,23 @@
 import { isDue, isLearned } from "@exam/core";
+import { CatalogSwitch, useCatalog } from "../components/CatalogSwitch.tsx";
 import { ReviewNextStep } from "../components/ReviewNextStep.tsx";
 import { href, navigate } from "../router.ts";
 import { reviewed } from "../selection.ts";
-import { CATALOG_NAMES, PART_NAMES, useStore } from "../store.tsx";
+import { PART_NAMES, useStore } from "../store.tsx";
 
 export function HomeScreen() {
-  const { questions, progress, docOf, settings, updateSettings, catalogs, formulas } = useStore();
+  const { questions, progress, docOf, settings, updateSettings, formulas } = useStore();
+  const { catalog } = useCatalog();
   const startReview = () => {
     updateSettings({ reviewMode: true });
     navigate("review");
   };
-  const available = (["WG", "NWG"] as const).filter((c) => catalogs.some((x) => x.id.startsWith(`${c}-`)));
-  const catalog = available.includes(settings.catalog) ? settings.catalog : available[0]!;
   const wrong = questions.filter((q) => docOf(q.key).startsWith(`${catalog}-`) && progress[q.key]?.last === "wrong");
 
   return (
     <div className="screen">
-      {settings.reviewMode && <ReviewNextStep />}
-      {available.length > 1 && (
-        <div className="segmented">
-          {available.map((c) => (
-            <button key={c} className={c === catalog ? "selected" : ""} onClick={() => updateSettings({ catalog: c })}>
-              {CATALOG_NAMES[c]}
-            </button>
-          ))}
-        </div>
-      )}
+      <CatalogSwitch />
+      {settings.reviewMode && <ReviewNextStep catalog={catalog} />}
 
       {([1, 2, 3] as const).map((part) => {
         const id = `${catalog}-${part}`;

@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { QuestionView } from "../components/QuestionView.tsx";
+import { type CatalogId, useCatalog } from "../components/CatalogSwitch.tsx";
 import { ReviewNextStep } from "../components/ReviewNextStep.tsx";
 import { href, type Route } from "../router.ts";
 import { type Mode, reviewed, type ReviewFilter, selectQuestions } from "../selection.ts";
-import { useStore } from "../store.tsx";
+import { CATALOG_NAMES, useStore } from "../store.tsx";
 
 const REVIEW_TITLES: Record<ReviewFilter, string> = {
   unsure: "Schritt 1: Unsichere Fragen",
@@ -27,6 +28,7 @@ export function LearnScreen({ route }: { route: Route }) {
   const catalog = route.query.get("catalog");
   const chapter = route.query.get("chapter") ?? undefined;
   const review = (route.query.get("filter") ?? "unsure") as ReviewFilter;
+  const current = useCatalog().catalog;
 
   // The question list is fixed when the session starts, so answering doesn't reshuffle it.
   const keys = useMemo(() => {
@@ -43,7 +45,10 @@ export function LearnScreen({ route }: { route: Route }) {
   const [right, setRight] = useState(0);
 
   const q = store.byKey.get(keys[index] ?? "");
-  const title = mode === "review" ? REVIEW_TITLES[review] : TITLES[mode];
+  const title =
+    mode === "review"
+      ? `${REVIEW_TITLES[review]}${catalog ? ` · ${CATALOG_NAMES[catalog as CatalogId]}` : ""}`
+      : TITLES[mode];
   if (mode === "review" && !q) {
     // End of a review session: say what was left out and what comes next.
     const skipped = keys.filter((k) => !reviewed(store.byKey.get(k)!)).length;
@@ -57,7 +62,7 @@ export function LearnScreen({ route }: { route: Route }) {
             wählen Sie einfach „? Unklar“.
           </p>
         )}
-        <ReviewNextStep />
+        <ReviewNextStep catalog={(catalog as CatalogId | null) ?? current} />
         <a className="button" href={href("review")}>
           Zur Übersicht der Prüfung
         </a>

@@ -1,11 +1,15 @@
 import { useRef, useState } from "react";
 import { href } from "../router.ts";
+import { CatalogSwitch, useCatalog } from "../components/CatalogSwitch.tsx";
 import { ReviewNextStep, useExportReviews } from "../components/ReviewNextStep.tsx";
 import { reviewed } from "../selection.ts";
 import { catalogLabel, useStore } from "../store.tsx";
 
 export function ReviewScreen() {
-  const { questions, docOf, catalogs, importReviews, priorityOf } = useStore();
+  const store = useStore();
+  const { docOf, catalogs, importReviews, priorityOf } = store;
+  const { catalog } = useCatalog();
+  const questions = store.questions.filter((q) => docOf(q.key).startsWith(`${catalog}-`));
   const exportReviews = useExportReviews();
   const [message, setMessage] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -35,7 +39,8 @@ export function ReviewScreen() {
         Die richtigen Antworten hat die App aus den Musterlösungen des BAFA abgeleitet. Nötig ist nur die Prüfung der
         unsicheren Fragen; bei allen übrigen genügt eine kleine Stichprobe. Die App führt Sie Schritt für Schritt:
       </p>
-      <ReviewNextStep />
+      <CatalogSwitch />
+      <ReviewNextStep catalog={catalog} />
       <div className="stats">
         <div>
           <strong>{done.length}</strong> von {questions.length} geprüft
@@ -49,33 +54,33 @@ export function ReviewScreen() {
 
       <h2>Gezielt prüfen</h2>
       <div className="buttons">
-        <a className="button" href={href("learn", { mode: "review", filter: "unsure" })}>
+        <a className="button" href={href("learn", { mode: "review", catalog, filter: "unsure" })}>
           Unsichere Fragen ({unsure})
         </a>
-        <a className="button" href={href("learn", { mode: "review", filter: "sample" })}>
+        <a className="button" href={href("learn", { mode: "review", catalog, filter: "sample" })}>
           Stichprobe: 20 zufällige
         </a>
-        <a className="button" href={href("learn", { mode: "review", filter: "all" })}>
+        <a className="button" href={href("learn", { mode: "review", catalog, filter: "all" })}>
           Alle ungeprüften der Reihe nach
         </a>
         {count("wrong") > 0 && (
-          <a className="button" href={href("learn", { mode: "review", filter: "wrong" })}>
+          <a className="button" href={href("learn", { mode: "review", catalog, filter: "wrong" })}>
             Als Fehler markiert ({count("wrong")})
           </a>
         )}
         {count("unclear") > 0 && (
-          <a className="button" href={href("learn", { mode: "review", filter: "unclear" })}>
+          <a className="button" href={href("learn", { mode: "review", catalog, filter: "unclear" })}>
             Unklar ({count("unclear")})
           </a>
         )}
       </div>
       <h3>Nach Katalog</h3>
       <ul className="chapters">
-        {catalogs.map(({ id }) => {
+        {catalogs.filter(({ id }) => id.startsWith(`${catalog}-`)).map(({ id }) => {
           const qs = questions.filter((q) => docOf(q.key) === id);
           return (
             <li key={id}>
-              <a href={href("learn", { mode: "review", filter: "unsure", doc: id })}>{catalogLabel(id)}</a>{" "}
+              <a href={href("learn", { mode: "review", catalog, filter: "unsure", doc: id })}>{catalogLabel(id)}</a>{" "}
               <span className="muted small">
                 {qs.filter(reviewed).length} / {qs.length} geprüft · {qs.filter(needsReview).length} unsicher
               </span>

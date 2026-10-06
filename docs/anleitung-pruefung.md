@@ -18,17 +18,20 @@ was dir gefällt oder fehlt – das baue ich danach ein.
 
 ## 3. Prüfen – die App führt dich
 
-Auf der Startseite ganz unten auf **„Antworten als Fachperson prüfen“** tippen. Ab dann
-zeigt dir die App oben auf der Startseite immer den nächsten Schritt mit einem Knopf dafür:
+Auf der Startseite ganz unten auf **„Antworten als Fachperson prüfen“** tippen. Oben
+wählst du **Wohngebäude** oder **Nichtwohngebäude** – beide werden getrennt geprüft.
+Die App startet mit den Wohngebäuden (deine drei Kataloge Gebäudehülle,
+Gebäudetechnik und Rechtliches). Für die gewählte Gruppe zeigt sie dir oben auf der
+Startseite immer den nächsten Schritt mit einem Knopf dafür:
 
-1. **Unsichere Fragen** (rund 130) – bei etwa 100 hat die App keine richtige Antwort
-   gefunden, bei etwa 30 ist sie unsicher. Das ist der eigentliche Auftrag.
+1. **Unsichere Fragen** – bei den Wohngebäuden 78, bei den Nichtwohngebäuden 52.
+   Das ist der eigentliche Auftrag.
 2. **Stichprobe** – 20 zufällige Fragen, deren Antwort die App für sicher hält.
 3. **Ergebnisse zurückschicken** – ein Knopf, dann die Datei per Messenger oder
    E-Mail an mich schicken. Schick mir dazu gern auch deine Notizen zur App.
 
-Danach steht dort **„✓ Fertig – vielen Dank!“**. **Die übrigen ~1170 Fragen musst
-du nicht prüfen.**
+Danach steht dort **„✓ Fertig – vielen Dank!“**. Alle anderen Fragen musst du nicht
+prüfen. Die Nichtwohngebäude sind freiwillig – die App bietet sie dir am Ende an.
 
 Bei jeder Frage steht im gestrichelten Kasten unten, was zu tun ist:
 

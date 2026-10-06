@@ -35,19 +35,23 @@ export type ReviewStep =
   | { kind: "export"; changed: number }
   | { kind: "done" };
 
-/** What the reviewer should do next: uncertain questions, then the sample, then send the results. */
+/**
+ * What the reviewer should do next with these questions (one building type):
+ * uncertain questions, then the sample, then send the results.
+ */
 export function reviewStep(
   questions: AnnotatedQuestion[],
   priority: (key: string) => number,
-  /** Questions reviewed on this device since the last export. */
-  unexported: number,
+  /** Reviewed on this device since the last export. */
+  unexported: (key: string) => boolean,
 ): ReviewStep {
   const must = questions.filter((q) => priority(q.key) >= 2);
   const open = must.filter((q) => !reviewed(q)).length;
   if (open > 0) return { kind: "unsure", open, total: must.length };
   const done = sampleDone(questions, priority);
   if (done < SAMPLE && questions.some((q) => priority(q.key) === 1 && !reviewed(q))) return { kind: "sample", done };
-  if (unexported > 0) return { kind: "export", changed: unexported };
+  const changed = questions.filter((q) => unexported(q.key)).length;
+  if (changed > 0) return { kind: "export", changed };
   return { kind: "done" };
 }
 

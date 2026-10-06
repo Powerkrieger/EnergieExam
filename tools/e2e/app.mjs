@@ -103,6 +103,10 @@ try {
   await page.goto("http://localhost:5198/#/review");
   const stats = await page.locator(".stats").innerText();
   step(`Nach Neuladen: ${stats.replace(/\s+/g, " ")}`);
+  await page.locator(".segmented button", { hasText: "Nichtwohngebäude" }).click();
+  await page.getByText("Nichtwohngebäude · Schritt 1 von 3").waitFor();
+  await shot("11-review-nwg");
+  step(`Nichtwohngebäude getrennt: ${(await page.locator(".next-step").innerText()).replace(/\s+/g, " ")}`);
 } finally {
   await browser.close();
   await server.close();

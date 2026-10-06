@@ -49,8 +49,8 @@ interface Store extends Data {
   annotations: Record<string, QuestionAnnotation>;
   /** reviewPriority of the imported question, regardless of later reviews. */
   priorityOf: (key: string) => number;
-  /** Local reviews changed since the last export. */
-  unexported: number;
+  /** Whether the local review of a question changed since the last export. */
+  unexported: (key: string) => boolean;
   importPdfs(files: File[], onProgress: (p: ImportProgress) => void): Promise<ImportResult[]>;
   record(key: string, right: boolean): void;
   setReview(key: string, a: QuestionAnnotation | null): void;
@@ -104,8 +104,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       docOf: (key) => docs.get(key) ?? "",
       annotations,
       priorityOf: (key) => priorities.get(key) ?? 0,
-      unexported: Object.values(data.reviews).filter((a) => Date.parse(a.reviewedAt ?? "") > (data.settings.exportedAt ?? 0))
-        .length,
+      unexported: (key) => Date.parse(data.reviews[key]?.reviewedAt ?? "") > (data.settings.exportedAt ?? 0),
 
       async importPdfs(files, onProgress) {
         const results: ImportResult[] = [];

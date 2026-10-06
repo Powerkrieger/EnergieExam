@@ -6,6 +6,12 @@ const question = (n: number, priority: number): AnnotatedQuestion =>
   ({ key: `WG/${n}`, hash: "h", priority }) as unknown as Question;
 const priorityOf = (qs: AnnotatedQuestion[]) => (key: string) =>
   (qs.find((q) => q.key === key) as unknown as { priority: number }).priority;
+const none = () => false;
+/** The first n questions of the test set changed since the last export. */
+const some = (n: number) => {
+  const keys = new Set(["WG/1", "WG/2", ...Array.from({ length: n }, (_, k) => `WG/${100 + k}`)].slice(0, n));
+  return (key: string) => keys.has(key);
+};
 const review = (q: AnnotatedQuestion): AnnotatedQuestion => ({ ...q, annotation: { hash: "h", status: "confirmed" } });
 
 describe("guided review", () => {
@@ -16,13 +22,13 @@ describe("guided review", () => {
   const priority = priorityOf(all);
 
   it("starts with the uncertain questions", () => {
-    expect(reviewStep(all, priority, 0)).toEqual({ kind: "unsure", open: 2, total: 2 });
+    expect(reviewStep(all, priority, none)).toEqual({ kind: "unsure", open: 2, total: 2 });
     expect(selectQuestions(all, {}, "review", { review: "unsure", priority })).toEqual(["WG/1", "WG/2"]);
   });
 
   it("then asks for the rest of the sample", () => {
     const qs = [...must.map(review), ...heuristic.slice(0, 5).map(review), ...heuristic.slice(5), ...sure];
-    expect(reviewStep(qs, priority, 7)).toEqual({ kind: "sample", done: 5 });
+    expect(reviewStep(qs, priority, some(7))).toEqual({ kind: "sample", done: 5 });
     const sample = selectQuestions(qs, {}, "review", { review: "sample", priority });
     expect(sample).toHaveLength(SAMPLE - 5);
     expect(sample.every((k) => priority(k) === 1 && !["WG/100", "WG/104"].includes(k))).toBe(true);
@@ -30,7 +36,8 @@ describe("guided review", () => {
 
   it("then asks to send the results, and is done once they are sent", () => {
     const qs = [...must.map(review), ...heuristic.slice(0, SAMPLE).map(review), ...heuristic.slice(SAMPLE), ...sure];
-    expect(reviewStep(qs, priority, 22)).toEqual({ kind: "export", changed: 22 });
-    expect(reviewStep(qs, priority, 0)).toEqual({ kind: "done" });
+    expect(reviewStep(qs, priority, some(22))).toEqual({ kind: "export", changed: 22 });
+    expect(reviewStep(qs, priority, (key) => key.startsWith("NWG/"))).toEqual({ kind: "done" });
+    expect(reviewStep(qs, priority, none)).toEqual({ kind: "done" });
   });
 });
