@@ -49,6 +49,7 @@ private/             git-ignored: PDFs, imports, golden snapshots, screenshots
 ```sh
 npm run dev -w @exam/web                 # web app on http://localhost:5173 (also reachable in the LAN)
 npm run android -w @exam/web             # build APK (needs JAVA_HOME with JDK 21, e.g. ~/android-studio/jbr)
+npm run android:private -w @exam/web     # same, with private/pdfs built in – personal use only, never publish
 node tools/e2e/app.mjs                   # end-to-end test in headless Chromium (uses private/pdfs)
 ```
 

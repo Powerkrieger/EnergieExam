@@ -1,11 +1,15 @@
 import { isDue, isLearned } from "@exam/core";
 import { ReviewNextStep } from "../components/ReviewNextStep.tsx";
-import { href } from "../router.ts";
+import { href, navigate } from "../router.ts";
 import { reviewed } from "../selection.ts";
 import { CATALOG_NAMES, PART_NAMES, useStore } from "../store.tsx";
 
 export function HomeScreen() {
   const { questions, progress, docOf, settings, updateSettings, catalogs, formulas } = useStore();
+  const startReview = () => {
+    updateSettings({ reviewMode: true });
+    navigate("review");
+  };
   const available = (["WG", "NWG"] as const).filter((c) => catalogs.some((x) => x.id.startsWith(`${c}-`)));
   const catalog = available.includes(settings.catalog) ? settings.catalog : available[0]!;
   const wrong = questions.filter((q) => docOf(q.key).startsWith(`${catalog}-`) && progress[q.key]?.last === "wrong");
@@ -79,10 +83,12 @@ export function HomeScreen() {
               Formelsammlung
             </a>
           )}
-          {settings.reviewMode && (
+          {settings.reviewMode ? (
             <a className="button" href={href("review")}>
               Prüfung der Antworten
             </a>
+          ) : (
+            <button onClick={startReview}>Antworten als Fachperson prüfen</button>
           )}
         </div>
       </section>

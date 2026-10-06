@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { type Catalog, mergeAnnotations, parseAnnotationFile, type Question } from "@exam/core";
 import { detectDocument, importCatalog, importFormulas } from "./index.ts";
@@ -8,6 +8,7 @@ import { nodePdfJs, openPdf } from "./node.ts";
 const USAGE = `Usage:
   node packages/importer/src/cli.ts dump <pdf> [fromPage] [toPage]   print lines, fields and solutions per page
   node packages/importer/src/cli.ts import <outDir> <pdf>...          write <catalog>-<part>.json per catalogue, formeln.json
+  node packages/importer/src/cli.ts bundle <outDir> <pdf>...          like import, plus the PDFs and manifest.json for the app
   node packages/importer/src/cli.ts report <pdf>... [--verbose]       import and print coverage / issues
   node packages/importer/src/cli.ts show <pdf> <code>...              print imported questions as JSON
   node packages/importer/src/cli.ts formulas <pdf>                    list the formula collection index
@@ -40,22 +41,30 @@ async function load(file: string): Promise<Catalog> {
   return importCatalog(nodePdfJs, doc, kind.catalog);
 }
 
-async function importTo(outDir: string, files: string[]) {
+/** With `withPdfs`, also copies each PDF as <id>.pdf and lists them in manifest.json (built-in PDFs of a private build). */
+async function importTo(outDir: string, files: string[], withPdfs = false) {
   await mkdir(outDir, { recursive: true });
+  const manifest: { id: string; name: string }[] = [];
   for (const file of files) {
     const doc = await openPdf(file);
+    let id: string;
     if ((await detectDocument(doc)).kind === "formulas") {
       const index = await importFormulas(nodePdfJs, doc);
-      const out = join(outDir, "formeln.json");
-      await writeFile(out, JSON.stringify(index, null, 2));
-      console.log(`${basename(file)} → ${out} (${index.entries.length} Formeln)`);
-      continue;
+      id = "formeln";
+      await writeFile(join(outDir, `${id}.json`), JSON.stringify(index, null, 2));
+      console.log(`${basename(file)} → ${id}.json (${index.entries.length} Formeln)`);
+    } else {
+      const catalog = await load(file);
+      id = `${catalog.catalog}-${catalog.part}`;
+      await writeFile(join(outDir, `${id}.json`), JSON.stringify(catalog, null, 2));
+      console.log(`${basename(file)} → ${id}.json (${catalog.questions.length} Fragen)`);
     }
-    const catalog = await load(file);
-    const out = join(outDir, `${catalog.catalog}-${catalog.part}.json`);
-    await writeFile(out, JSON.stringify(catalog, null, 2));
-    console.log(`${basename(file)} → ${out} (${catalog.questions.length} Fragen)`);
+    if (withPdfs) {
+      await copyFile(file, join(outDir, `${id}.pdf`));
+      manifest.push({ id, name: basename(file) });
+    }
   }
+  if (withPdfs) await writeFile(join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2));
 }
 
 function isResolved(q: Question): boolean {
@@ -98,6 +107,10 @@ switch (cmd) {
   case "import":
     if (args.length < 2) throw new Error(USAGE);
     await importTo(args[0]!, args.slice(1));
+    break;
+  case "bundle":
+    if (args.length < 2) throw new Error(USAGE);
+    await importTo(args[0]!, args.slice(1), true);
     break;
   case "formulas": {
     const index = await importFormulas(nodePdfJs, await openPdf(args[0]!));

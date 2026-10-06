@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
     "preview": "vite preview",
-    "android": "vite build && cap sync android && cd android && ./gradlew assembleDebug"
+    "android": "vite build && cap sync android && cd android && ./gradlew assembleDebug",
+    "android:private": "vite build && node ../../packages/importer/src/cli.ts bundle dist/bundled ../../private/pdfs/*.pdf && cap sync android && cd android && ./gradlew assembleDebug"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

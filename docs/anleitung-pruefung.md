@@ -6,27 +6,26 @@ brauchen wir den Blick einer Fachperson.
 
 ## 1. App installieren
 
-- **Android:** Die Datei `Energieberatung.apk` auf dem Handy öffnen. Android fragt,
-  ob Apps aus dieser Quelle installiert werden dürfen – einmal erlauben.
+Die Datei `Energieberatung.apk` auf dem Handy öffnen. Android fragt, ob Apps aus
+dieser Quelle installiert werden dürfen – einmal erlauben. Die Fragen und die
+Formelsammlung sind schon drin. Bitte gib die App nicht weiter – die Inhalte gehören
+dem BAFA und sind nur für deinen eigenen Gebrauch.
 
-## 2. Fragen importieren
+## 2. Ausprobieren
 
-1. In der App auf **„BAFA-Seite zur Qualifikationsprüfung öffnen“** tippen.
-2. Dort die Übungsfragen (Wohngebäude und Nichtwohngebäude, je Teil 1–3) und die
-   **Formelsammlung** herunterladen.
-3. Zurück in der App **„PDFs auswählen …“** und alle heruntergeladenen PDFs auswählen.
-   Der Import dauert etwa eine Minute.
+Schau dich in Ruhe um: lerne ein paar Fragen, öffne die Formelsammlung. Notiere dir,
+was dir gefällt oder fehlt – das baue ich danach ein.
 
 ## 3. Prüfen – die App führt dich
 
-Nach dem Import auf **„Antworten als Fachperson prüfen“** tippen. Ab dann zeigt dir
-die App oben auf der Startseite immer den nächsten Schritt mit einem Knopf dafür:
+Auf der Startseite ganz unten auf **„Antworten als Fachperson prüfen“** tippen. Ab dann
+zeigt dir die App oben auf der Startseite immer den nächsten Schritt mit einem Knopf dafür:
 
 1. **Unsichere Fragen** (rund 130) – bei etwa 100 hat die App keine richtige Antwort
    gefunden, bei etwa 30 ist sie unsicher. Das ist der eigentliche Auftrag.
 2. **Stichprobe** – 20 zufällige Fragen, deren Antwort die App für sicher hält.
 3. **Ergebnisse zurückschicken** – ein Knopf, dann die Datei per Messenger oder
-   E-Mail an mich schicken.
+   E-Mail an mich schicken. Schick mir dazu gern auch deine Notizen zur App.
 
 Danach steht dort **„✓ Fertig – vielen Dank!“**. **Die übrigen ~1170 Fragen musst
 du nicht prüfen.**

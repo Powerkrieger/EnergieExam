@@ -73,7 +73,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const reload = useCallback(() => db.loadAll().then(setData, (e) => setError(String(e))), []);
+  const reload = useCallback(
+    () =>
+      db
+        .loadAll()
+        .then(async (d) => (d.catalogs.length === 0 && (await installBundled()) ? db.loadAll() : d))
+        .then(setData, (e) => setError(String(e))),
+    [],
+  );
   useEffect(() => void reload(), [reload]);
 
   const store = useMemo<Store | null>(() => {
@@ -178,6 +185,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   if (error) return <div className="screen error">Speicher konnte nicht geöffnet werden: {error}</div>;
   if (!store) return <div className="screen loading">Lade …</div>;
   return <Context.Provider value={store}>{children}</Context.Provider>;
+}
+
+/**
+ * Private builds ship the PDFs, already imported (`npm run android:private`).
+ * Stores them on first start; false if this build has none.
+ */
+async function installBundled(): Promise<boolean> {
+  let manifest: { id: db.DocId; name: string }[];
+  try {
+    manifest = await (await fetch("bundled/manifest.json")).json();
+  } catch {
+    return false; // No bundle (or the dev server's index.html instead of JSON).
+  }
+  for (const { id, name } of manifest) {
+    const [content, bytes] = await Promise.all([
+      fetch(`bundled/${id}.json`).then((r) => r.json()),
+      fetch(`bundled/${id}.pdf`).then((r) => r.arrayBuffer()),
+    ]);
+    const file = { id, name, bytes: new Uint8Array(bytes), importedAt: Date.now() };
+    await db.saveImport(file, id === FORMULA_DOC ? { formulas: content } : { catalog: content });
+  }
+  return manifest.length > 0;
 }
 
 export const CATALOG_NAMES = { WG: "Wohngebäude", NWG: "Nichtwohngebäude" } as const;
