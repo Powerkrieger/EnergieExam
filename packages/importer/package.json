@@ -1,0 +1,11 @@
+{
+  "name": "@exam/importer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": {
+    "@exam/core": "*",
+    "pdfjs-dist": "^6.4.299"
+  }
+}
