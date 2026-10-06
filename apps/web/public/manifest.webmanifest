@@ -1,0 +1,9 @@
+{
+  "name": "Prüfungstrainer Energieberatung",
+  "short_name": "Energieberatung",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f5f1",
+  "theme_color": "#1f5f4a",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

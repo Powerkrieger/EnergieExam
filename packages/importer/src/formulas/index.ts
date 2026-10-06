@@ -14,6 +14,7 @@ const CHAPTER_MIN_SIZE = 11.5;
 interface Draft {
   chapter: string;
   page: number;
+  printedPage?: number;
   top: number;
   bottom: number;
   title: string[];
@@ -34,6 +35,7 @@ export async function importFormulas(pdfjs: PdfJs, doc: PdfDocument): Promise<Fo
     if (page.lines.some((l) => /^Herausgeber/.test(l.plain))) break; // imprint
     const { nameEnd, legendStart } = columns(page.lines, page.width);
     const onPage: Draft[] = [];
+    const printed = page.lines.map((l) => /Seite\s+(\d+)\s*\/\s*\d+/.exec(l.plain)?.[1]).find(Boolean);
     let current: Draft | null = null;
     const close = (bottom: number) => {
       if (current) current.bottom = Math.max(current.bottom, bottom);
@@ -85,7 +87,10 @@ export async function importFormulas(pdfjs: PdfJs, doc: PdfDocument): Promise<Fo
       if (legend) target.legend.push(legend);
     }
     // Each row ends where the next one starts; the last one at the footer.
-    onPage.forEach((d, i) => (d.bottom = onPage[i + 1]?.top ?? FOOTER_TOP));
+    onPage.forEach((d, i) => {
+      d.bottom = onPage[i + 1]?.top ?? FOOTER_TOP;
+      if (printed) d.printedPage = Number(printed);
+    });
     drafts.push(...onPage);
   }
 
@@ -101,6 +106,7 @@ export async function importFormulas(pdfjs: PdfJs, doc: PdfDocument): Promise<Fo
       chapter: d.chapter,
       title,
       region: { page: d.page, rect },
+      ...(d.printedPage !== undefined && { printedPage: d.printedPage }),
       symbols: parseLegend(d.legend),
       text: [...d.formula, ...d.legend].join("\n"),
     };

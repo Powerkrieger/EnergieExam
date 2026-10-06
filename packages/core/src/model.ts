@@ -79,6 +79,8 @@ export interface Question {
   solution: RichText[];
   /** Where the question body lives in the PDF (one region per page). */
   source: PageRegion[];
+  /** Where the (normally hidden) official solution is drawn. */
+  solutionSource: PageRegion[];
   /** Areas without text inside the body, typically figures or drawn tables. */
   figures: PageRegion[];
   /**
@@ -110,6 +112,8 @@ export interface FormulaEntry {
   title: string;
   /** The row's area in the PDF, for rendering it from the user's copy. */
   region: PageRegion;
+  /** Page number printed in the footer ("Seite 1 / 23"), if found. */
+  printedPage?: number;
   /** Symbol legend: "Q" → "Wärmemenge [Wh]". */
   symbols: { symbol: string; description: string }[];
   /** All text of the row (formula and legend), for search and matching. Approximate for typeset formulas. */

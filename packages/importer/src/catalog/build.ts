@@ -39,6 +39,7 @@ export function buildQuestion(raw: RawQuestion, catalog: CatalogId, pages: Map<n
     interaction,
     solution,
     source,
+    solutionSource: raw.solutions.map((s) => ({ page: s.page, rect: s.rect })),
     figures,
     issues,
     hash: "",
@@ -255,8 +256,12 @@ function regions(raw: RawQuestion, rows: BodyRow[], pages: Map<number, PageSize>
   const source: PageRegion[] = [];
   const figures: PageRegion[] = [];
   const lastButton = raw.buttons.at(-1);
-  const pageNumbers = new Set([raw.header.page, ...rows.map((r) => r.page), ...raw.buttons.map((b) => b.page)]);
-  for (const page of [...pageNumbers].sort((a, b) => a - b)) {
+  // Every page from the header to the last part's button belongs to the question,
+  // including pages that only hold images (no text, no fields).
+  const used = [raw.header.page, ...rows.map((r) => r.page), ...raw.buttons.map((b) => b.page)];
+  const first = Math.min(...used);
+  const last = Math.max(...used);
+  for (let page = first; page <= last; page++) {
     const size = pages.get(page) ?? { width: 595, height: 842 };
     const top = page === raw.header.page ? raw.header.top + 2 : size.height - PAGE_TOP_MARGIN;
     const bodyTop = page === raw.header.page ? raw.header.bottom - 4 : top;

@@ -25,3 +25,29 @@ export function parseGermanNumber(text: string): number | null {
   const v = Number(m[0].replace(/−/, "-").replace(/\./g, "").replace(",", "."));
   return Number.isFinite(v) ? v : null;
 }
+
+/**
+ * Joins lines wrapped by the PDF layout into paragraphs. A line ends a paragraph
+ * after sentence punctuation, an enumerated item starts a new one, and table
+ * rows (with tabs) stay as they are.
+ */
+export function reflowLines(lines: RichText[]): RichText[] {
+  const out: RichText[] = [];
+  for (const line of lines) {
+    const prev = out.at(-1);
+    // "→ Ja," on its own line belongs to the statement above.
+    const verdict = prev !== undefined && /^→/.test(line) && !prev.includes("→");
+    const breaks =
+      !verdict &&
+      (prev === undefined ||
+      /[.:!?;]$/.test(prev) ||
+      (/,$/.test(prev) && prev.includes("→")) ||
+      prev.includes("\t") ||
+      line.includes("\t") ||
+      /^([a-z]\)|[A-Z]\)|\d+[.)]\s|[-•·▪]\s|→)/.test(line));
+    if (breaks || prev === undefined) out.push(line);
+    else if (/[a-zäöüß]-$/.test(prev) && /^[a-zäöüß]/.test(line)) out[out.length - 1] = prev.slice(0, -1) + line;
+    else out[out.length - 1] = `${prev} ${line}`;
+  }
+  return out;
+}
