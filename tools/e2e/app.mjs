@@ -103,6 +103,11 @@ try {
   await page.goto("http://localhost:5198/#/review");
   const stats = await page.locator(".stats").innerText();
   step(`Nach Neuladen: ${stats.replace(/\s+/g, " ")}`);
+  // Export as the reviewer would; the file is used to test merging (see docs/review-workflow.md).
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Prüfergebnisse exportieren" }).click();
+  await (await download).saveAs(join(shots, "export.json"));
+  step("Prüfergebnisse exportiert (private/screens/export.json)");
   await page.locator(".segmented button", { hasText: "Nichtwohngebäude" }).click();
   await page.getByText("Nichtwohngebäude · Schritt 1 von 3").waitFor();
   await shot("11-review-nwg");

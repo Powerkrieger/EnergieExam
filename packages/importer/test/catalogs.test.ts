@@ -1,7 +1,7 @@
 // Integration tests against the real BAFA PDFs. They are not part of the
 // repository (see README); put them into private/pdfs/ to run these tests.
 // Snapshots contain BAFA content and are therefore written to private/golden/.
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Catalog, Question } from "@exam/core";
 import { describe, expect, it } from "vitest";
@@ -10,6 +10,7 @@ import { nodePdfJs, openPdf } from "../src/node.ts";
 
 const PDFS = join(import.meta.dirname, "../../../private/pdfs");
 const GOLDEN = join(import.meta.dirname, "../../../private/golden");
+const BASELINE = join(import.meta.dirname, "../../../annotations/review-baseline.json");
 
 const CATALOGS = [
   { file: "wg1.pdf", catalog: "WG", part: 1, minQuestions: 220, minResolved: 0.95 },
@@ -67,6 +68,19 @@ describe.skipIf(!existsSync(PDFS))("BAFA catalogues", () => {
       it("derives answers for most questions", () => {
         const share = catalog.questions.filter(resolved).length / catalog.questions.length;
         expect(share).toBeGreaterThanOrEqual(spec.minResolved);
+      });
+
+      // Reviews from a handed-out build refer to these hashes (and option positions).
+      // If this fails, merge the outstanding reviews first – see docs/review-workflow.md.
+      it.skipIf(!existsSync(BASELINE))("keeps the question hashes of the review build", () => {
+        const baseline: { questions: Record<string, string> } = JSON.parse(readFileSync(BASELINE, "utf8"));
+        // Question codes start with the part number ("WG/2.1.3.07").
+        const prefix = `${spec.catalog}/${spec.part}.`;
+        const expected = Object.fromEntries(Object.entries(baseline.questions).filter(([k]) => k.startsWith(prefix)));
+        expect(Object.keys(expected).length).toBeGreaterThan(0);
+        const actual = Object.fromEntries(catalog.questions.map((q) => [q.key, q.hash]));
+        const changed = Object.keys(expected).filter((k) => actual[k] !== expected[k]);
+        expect(changed, "Fragen mit geänderter Prüf-Kennung").toEqual([]);
       });
 
       it("matches the answer-key snapshot", async () => {

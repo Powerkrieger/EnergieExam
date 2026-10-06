@@ -1,6 +1,17 @@
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
+import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
-import { type Catalog, mergeAnnotations, parseAnnotationFile, type Question } from "@exam/core";
+import {
+  type AnnotationFile,
+  type Catalog,
+  mergeAnnotations,
+  parseAnnotationFile,
+  plainText,
+  type Question,
+  type QuestionAnnotation,
+  type RichText,
+} from "@exam/core";
 import { detectDocument, importCatalog, importFormulas } from "./index.ts";
 import { extractPage } from "./pdf/page.ts";
 import { nodePdfJs, openPdf } from "./node.ts";
@@ -12,7 +23,24 @@ const USAGE = `Usage:
   node packages/importer/src/cli.ts report <pdf>... [--verbose]       import and print coverage / issues
   node packages/importer/src/cli.ts show <pdf> <code>...              print imported questions as JSON
   node packages/importer/src/cli.ts formulas <pdf>                    list the formula collection index
-  node packages/importer/src/cli.ts merge-reviews <file>...           merge exported review files into annotations/annotations.json`;
+  node packages/importer/src/cli.ts merge-reviews <file>...           merge exported review files into annotations/annotations.json
+  node packages/importer/src/cli.ts reviews <file> [pdf...]           list corrections, notes and outdated reviews (default PDFs: private/pdfs)
+  node packages/importer/src/cli.ts baseline <name> <pdf>...          record question hashes of a build handed out for review`;
+
+const ROOT = join(import.meta.dirname, "../../..");
+const ANNOTATIONS = join(ROOT, "annotations/annotations.json");
+const BASELINE = join(ROOT, "annotations/review-baseline.json");
+
+/**
+ * Question hashes of the build a reviewer has. Reviews only apply while the
+ * importer produces the same hashes, so this is checked when merging and in tests.
+ */
+interface Baseline {
+  build: string;
+  createdAt: string;
+  pdfs: Record<string, { name: string; sha256: string }>;
+  questions: Record<string, string>;
+}
 
 async function dump(file: string, from = 1, to = Infinity) {
   const doc = await openPdf(file);
@@ -65,6 +93,112 @@ async function importTo(outDir: string, files: string[], withPdfs = false) {
     }
   }
   if (withPdfs) await writeFile(join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2));
+}
+
+async function baseline(build: string, files: string[]) {
+  const result: Baseline = { build, createdAt: new Date().toISOString(), pdfs: {}, questions: {} };
+  for (const file of files) {
+    const doc = await openPdf(file);
+    const kind = await detectDocument(doc);
+    if (kind.kind !== "questions") continue;
+    const c = await importCatalog(nodePdfJs, doc, kind.catalog);
+    const sha256 = createHash("sha256").update(await readFile(file)).digest("hex");
+    result.pdfs[`${c.catalog}-${c.part}`] = { name: basename(file), sha256 };
+    for (const q of c.questions) result.questions[q.key] = q.hash;
+  }
+  await writeFile(BASELINE, JSON.stringify(result, null, 1) + "\n");
+  console.log(`${Object.keys(result.questions).length} Fragen aus ${Object.keys(result.pdfs).length} Katalogen → ${BASELINE}`);
+}
+
+async function readReviewFile(f: string): Promise<AnnotationFile> {
+  return parseAnnotationFile(JSON.parse(await readFile(f, "utf8")));
+}
+
+async function mergeReviews(files: string[]) {
+  // Every export contains all reviews so far; merge oldest first so the newest wins.
+  const incoming = await Promise.all(files.map(async (f) => ({ f, file: await readReviewFile(f) })));
+  incoming.sort((a, b) => a.file.exportedAt.localeCompare(b.file.exportedAt));
+  const base = parseAnnotationFile(JSON.parse(await readFile(ANNOTATIONS, "utf8")));
+  const questions = mergeAnnotations(base.questions, ...incoming.map((x) => x.file.questions));
+  const sorted = Object.fromEntries(Object.entries(questions).sort(([a], [b]) => a.localeCompare(b, "de", { numeric: true })));
+  await writeFile(ANNOTATIONS, JSON.stringify({ ...base, exportedAt: new Date().toISOString(), questions: sorted }, null, 2) + "\n");
+  for (const { f, file } of incoming) console.log(`${basename(f)} (exportiert ${file.exportedAt}): ${summary(file.questions)}`);
+  console.log(`→ ${Object.keys(sorted).length} Fragen in annotations/annotations.json`);
+
+  if (!existsSync(BASELINE)) return;
+  const b: Baseline = JSON.parse(await readFile(BASELINE, "utf8"));
+  const off = Object.entries(sorted).filter(([k, a]) => b.questions[k] !== undefined && b.questions[k] !== a.hash);
+  const unknown = Object.keys(sorted).filter((k) => b.questions[k] === undefined);
+  if (off.length || unknown.length) {
+    console.warn(
+      `WARNUNG: ${off.length} Prüfungen passen nicht zu Build "${b.build}", ${unknown.length} Fragen sind dort unbekannt:\n  ` +
+        [...off.map(([k]) => k), ...unknown].join(" "),
+    );
+  } else {
+    console.log(`Alle Prüfungen passen zu Build "${b.build}".`);
+  }
+}
+
+function summary(qs: Record<string, QuestionAnnotation>): string {
+  const all = Object.values(qs);
+  const n = (p: (a: QuestionAnnotation) => boolean) => all.filter(p).length;
+  return (
+    `${n((a) => a.status === "confirmed")} ✓, ${n((a) => a.status === "wrong")} ✗, ${n((a) => a.status === "unclear")} ?, ` +
+    `${n((a) => !!a.answer)} mit Antwort, ${n((a) => !!a.note?.trim())} mit Anmerkung, ${n((a) => !!a.formulas?.length)} mit Formeln`
+  );
+}
+
+/** Readable list of what the reviewer changed or remarked, against the current import. */
+async function listReviews(file: string, pdfs: string[]) {
+  const { questions: reviews, exportedAt } = await readReviewFile(file);
+  if (pdfs.length === 0) {
+    const dir = join(ROOT, "private/pdfs");
+    pdfs = (await readdir(dir)).filter((f) => f.endsWith(".pdf")).map((f) => join(dir, f));
+  }
+  const byKey = new Map<string, Question>();
+  for (const f of pdfs) {
+    const doc = await openPdf(f);
+    const kind = await detectDocument(doc);
+    if (kind.kind === "questions") for (const q of (await importCatalog(nodePdfJs, doc, kind.catalog)).questions) byKey.set(q.key, q);
+  }
+  console.log(`${basename(file)}, exportiert ${exportedAt}: ${summary(reviews)}\n`);
+  for (const [key, a] of Object.entries(reviews).sort(([x], [y]) => x.localeCompare(y, "de", { numeric: true }))) {
+    const q = byKey.get(key);
+    const remarkable = a.status !== "confirmed" || a.note?.trim() || (a.answer && q && answerText(q, a) !== importedText(q));
+    if (!remarkable && q?.hash === a.hash) continue;
+    console.log(`${key}  ${q?.topic ?? "(Frage nicht gefunden)"}  [${a.status ?? "–"}]`);
+    if (q && q.hash !== a.hash) console.log("  ACHTUNG: Frage hat sich seit der Prüfung geändert – Prüfung wird ignoriert");
+    if (q && a.answer) console.log(`  Antwort: ${importedText(q)}  →  ${answerText(q, a)}`);
+    if (a.note?.trim()) console.log(`  Anmerkung: ${a.note.trim()}`);
+  }
+}
+
+function importedText(q: Question): string {
+  const i = q.interaction;
+  if (i.kind === "single") return i.correct === null ? "?" : plainText(i.options[i.correct]!);
+  if (i.kind === "gaps") {
+    return i.gaps
+      .map((g) => (g.kind === "choice" ? (g.correct === null ? "?" : plainText(g.options[g.correct]!)) : (g.expected ?? "?")))
+      .join(" | ");
+  }
+  return "(offen)";
+}
+
+function answerText(q: Question, a: QuestionAnnotation): string {
+  const i = q.interaction;
+  const o = a.answer;
+  const option = (opts: RichText[], n: number) => (opts[n] ? plainText(opts[n]) : "?");
+  if (o?.kind === "single" && i.kind === "single") return option(i.options, o.correct);
+  if (o?.kind === "gaps" && i.kind === "gaps") {
+    return i.gaps
+      .map((g, n) => {
+        const x = o.gaps[n];
+        if (!x) return g.kind === "choice" ? (g.correct === null ? "?" : plainText(g.options[g.correct]!)) : (g.expected ?? "?");
+        return "correct" in x && g.kind === "choice" ? option(g.options, x.correct) : "expected" in x ? x.expected : "?";
+      })
+      .join(" | ");
+  }
+  return importedText(q);
 }
 
 function isResolved(q: Question): boolean {
@@ -128,18 +262,18 @@ switch (cmd) {
     }
     break;
   }
-  case "merge-reviews": {
-    // Later files win per question; the bundled file is shipped with the app.
-    const target = join(import.meta.dirname, "../../../annotations/annotations.json");
-    const base = parseAnnotationFile(JSON.parse(await readFile(target, "utf8")));
-    const incoming = await Promise.all(args.map(async (f) => parseAnnotationFile(JSON.parse(await readFile(f, "utf8")))));
-    const questions = mergeAnnotations(base.questions, ...incoming.map((f) => f.questions));
-    const sorted = Object.fromEntries(Object.entries(questions).sort(([a], [b]) => a.localeCompare(b, "de", { numeric: true })));
-    await writeFile(target, JSON.stringify({ ...base, exportedAt: new Date().toISOString(), questions: sorted }, null, 2) + "\n");
-    const counts = incoming.map((f, i) => `${basename(args[i]!)}: ${Object.keys(f.questions).length}`).join(", ");
-    console.log(`${counts} → ${Object.keys(sorted).length} Fragen in annotations/annotations.json`);
+  case "merge-reviews":
+    if (args.length === 0) throw new Error(USAGE);
+    await mergeReviews(args);
     break;
-  }
+  case "reviews":
+    if (!args[0]) throw new Error(USAGE);
+    await listReviews(args[0], args.slice(1));
+    break;
+  case "baseline":
+    if (args.length < 2) throw new Error(USAGE);
+    await baseline(args[0]!, args.slice(1));
+    break;
   case "report":
     await report(args.filter((a) => !a.startsWith("--")), args.includes("--verbose"));
     break;

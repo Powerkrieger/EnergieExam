@@ -25,7 +25,9 @@ packages/core        data model, grading, learning progress, review annotations,
 packages/importer    PDF → questions / formula index (pdf.js; runs in browser and Node)
 apps/web             React app (Vite); apps/web/android is the Capacitor Android project
 annotations/         annotations.json: reviewed answers and formula links (our own data, shipped with the app)
+                     review-baseline.json: question hashes of the build handed out for review
 docs/                anleitung-pruefung.md: guide for the expert reviewer (German)
+                     review-workflow.md: handing out a review build and merging the results
 tools/e2e            app tests in headless Chromium and on an Android emulator (via WebView DevTools)
 tools/browser-smoke  runs the importer in headless Chromium, compares with the Node import
 tools/dev            review helpers (pretty-print, random audit, compare two imports)
@@ -45,6 +47,8 @@ private/             git-ignored: PDFs, imports, golden snapshots, screenshots
 - **Integrating reviews:** `npm run import -- merge-reviews <file>.json` merges an
   exported file into `annotations/annotations.json`, which is bundled into the app.
   Annotations carry the question's content hash and are ignored if BAFA changes the question.
+  **A review round is open** – follow [docs/review-workflow.md](docs/review-workflow.md)
+  and don't change the importer's text extraction until its results are merged.
 
 ```sh
 npm run dev -w @exam/web                 # web app on http://localhost:5173 (also reachable in the LAN)
