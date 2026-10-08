@@ -4,18 +4,29 @@ The answer keys are derived from BAFA's sample solutions and need a subject-matt
 expert's check. The reviewer gets a private APK, reviews in the app and sends back a
 JSON file. This document is the checklist for both ends.
 
-## Current round: `review-1`
+## Current round: `review-2`
 
 | | |
 |---|---|
-| Handed out | 2026-10-06, to one reviewer (personal use only) |
-| Code | git tag `review-1` |
-| APK | `private/Energieberatung.apk`, SHA-256 `1d71fa25e558d9adb34d91853b37eb6eacb34691e68d1d68d97695e7e8d74bce` |
+| Built | 2026-10-09, for the same reviewer (personal use only) |
+| Code | git tag `review-2` |
+| APK | `private/Energieberatung.apk`, SHA-256 `5beefb0760a3ca1710c25f7bc40975d9ad46f106e7553067ef725e40c9aeecaa` |
 | Built with | `npm run android:private -w @exam/web` (PDFs from `private/pdfs` built in) |
 | Baseline | `annotations/review-baseline.json` (question hashes of that build) |
 | Guide sent along | `docs/anleitung-pruefung.md` |
 
-What the reviewer was asked to do, separately for Wohngebäude (her focus: the three WG
+New in this build: her review-1 results are bundled, the questions she flagged are
+fixed (marked "Behoben (review-2)" in their notes), and her feature requests
+(skip, mark difficult questions, repeat wrong ones) are in. A fresh install is fine;
+her review-1 results are already in the app.
+
+## Previous rounds
+
+`review-1` (handed out 2026-10-06, APK now `private/Energieberatung-review-1.apk`,
+SHA-256 `1d71fa25e558d9adb34d91853b37eb6eacb34691e68d1d68d97695e7e8d74bce`): merged
+2026-10-09, 98 WG questions.
+
+What the reviewer was asked to do in `review-1`, separately for Wohngebäude (her focus: the three WG
 catalogues) and, optionally, Nichtwohngebäude: review all uncertain questions (WG 78,
 NWG 52), then a random sample of 20, then export. She was also asked for feedback on
 the app itself. That feedback is meant to shape the final version.
@@ -60,7 +71,9 @@ the hash changes and the app silently ignores that review. Therefore:
 
 ## Handing out another build
 
-- Build with `npm run android:private -w @exam/web` on this machine. It is signed
+- Build with `npm run android:private -w @exam/web` on this machine. Gradle needs a
+  full JDK: if it complains about `JAVA_COMPILER`, prefix
+  `JAVA_HOME=~/android-studio/jbr`. It is signed
   with `~/.android/debug.keystore`. With the same key, the new APK installs **over** the
   old one and her local reviews stay. Tell her **not** to uninstall first. If the key is
   lost, ask her to export before installing.
