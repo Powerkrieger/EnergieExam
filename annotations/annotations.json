@@ -103,10 +103,10 @@
       ]
     },
     "WG/1.1.5.09": {
-      "hash": "6efc6407a5a5055b",
-      "status": "wrong",
+      "hash": "0ba780a2533eb2c1",
+      "status": "confirmed",
       "reviewedAt": "2026-10-07T13:48:47.444Z",
-      "note": "Die letzten beiden Lücken sind getauscht. Formelzeichen [frsi-Wert] und Einheit [-]"
+      "note": "Behoben (review-2): Die letzten beiden Lücken sind getauscht. Formelzeichen [frsi-Wert] und Einheit [-]"
     },
     "WG/1.1.5.11": {
       "hash": "f5abced94312ae85",
@@ -331,19 +331,10 @@
       "reviewedAt": "2026-10-08T09:49:49.684Z"
     },
     "WG/2.1.1.09": {
-      "hash": "75199fdfceeec112",
+      "hash": "d383a2369934a323",
       "status": "confirmed",
       "reviewedAt": "2026-10-07T14:04:06.992Z",
-      "note": "Single Choice Frage, Antwort 30% ist richtig, aber die Auswahlmöglichkeiten sind als Multiple Choice fragen auszuwählen ",
-      "answer": {
-        "kind": "gaps",
-        "gaps": [
-          {
-            "correct": 1
-          },
-          null
-        ]
-      }
+      "note": "Behoben (review-2): Single Choice Frage, Antwort 30% ist richtig, aber die Auswahlmöglichkeiten sind als Multiple Choice fragen auszuwählen"
     },
     "WG/2.1.2.10": {
       "hash": "8ca57871500dd9d1",
@@ -530,19 +521,27 @@
       ]
     },
     "WG/2.1.4.36": {
-      "hash": "f3a34b41a4c40573",
+      "hash": "18d0de3c32f68bf5",
       "status": "confirmed",
       "reviewedAt": "2026-10-08T09:19:24.738Z",
-      "note": "Musterlösung ist richtig, aber Antwortsatz fehlt, da soll man eigentlich das Ergebnis eintragen.",
+      "note": "Behoben (review-2): Musterlösung ist richtig, aber Antwortsatz fehlt, da soll man eigentlich das Ergebnis eintragen.",
       "formulas": [
         "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-leistungszahl-carnot-wirkungsgrad"
-      ]
+      ],
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "44,3 %"
+          }
+        ]
+      }
     },
     "WG/2.1.4.37": {
-      "hash": "0eb133e282d90974",
+      "hash": "868c7478cdf032d8",
       "status": "confirmed",
       "reviewedAt": "2026-10-08T09:20:30.088Z",
-      "note": "Antwortsatz muss man ausfüllen können mit der Lösung",
+      "note": "Behoben (review-2): Antwortsatz muss man ausfüllen können mit der Lösung",
       "formulas": [
         "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-leistungszahl-carnot-wirkungsgrad"
       ]
@@ -658,7 +657,7 @@
       "reviewedAt": "2026-10-08T09:24:33.440Z"
     },
     "WG/2.1.4.62": {
-      "hash": "c60472f2eb588e6b",
+      "hash": "dbefe2fc9490f883",
       "answer": {
         "kind": "gaps",
         "gaps": [
@@ -685,12 +684,18 @@
           },
           {
             "expected": "33,2 dB(A)"
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 2
           }
         ]
       },
       "status": "confirmed",
       "reviewedAt": "2026-10-07T17:02:57.150Z",
-      "note": "Da ist bei e ein Fehler unterlaufen. Die frage ist wieder ob es erfüllt ist oder nicht, es ist erfüllt. Und da sind auch ganz zum Schluss wieder auf die Frage drei antwortmöglichkeiten und die letzte ist richtig."
+      "note": "Behoben (review-2): Da ist bei e ein Fehler unterlaufen. Die frage ist wieder ob es erfüllt ist oder nicht, es ist erfüllt. Und da sind auch ganz zum Schluss wieder auf die Frage drei antwortmöglichkeiten und die letzte ist richtig."
     },
     "WG/2.1.4.64": {
       "hash": "eae48ceb0312f905",
@@ -1410,8 +1415,8 @@
       "reviewedAt": "2026-10-08T08:49:44.244Z"
     },
     "WG/3.3.13": {
-      "hash": "7b0bf3d80e0d4bb0",
-      "note": "Da sind zwei Fragen in eine gerutscht ",
+      "hash": "02b6fbdc5eaf696f",
+      "note": "Behoben (review-2): Da sind zwei Fragen in eine gerutscht",
       "reviewedAt": "2026-10-08T08:52:09.572Z",
       "answer": {
         "kind": "gaps",
@@ -1433,9 +1438,6 @@
           },
           {
             "expected": "7,20 €/(m²a)"
-          },
-          {
-            "correct": 1
           }
         ]
       },
@@ -1839,6 +1841,26 @@
       },
       "status": "confirmed",
       "reviewedAt": "2026-10-08T09:03:11.642Z"
+    },
+    "WG/3.3.15": {
+      "hash": "b4fc0220f91266dd",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 1
+      },
+      "reviewedAt": "2026-10-08T08:52:09.572Z"
+    },
+    "NWG/2.1.4.36": {
+      "hash": "18d0de3c32f68bf5",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "44,3 %"
+          }
+        ]
+      }
     }
   }
 }

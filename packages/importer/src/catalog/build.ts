@@ -20,7 +20,7 @@ export function buildQuestion(raw: RawQuestion, catalog: CatalogId, pages: Map<n
   const part = Number(code.split(".")[0]);
   if (part !== 1 && part !== 2 && part !== 3) issues.push(`Unerwarteter Teil im Fragencode: ${code}`);
 
-  const rows = buildRows(raw.body);
+  const rows = addMissingRadios(buildRows(raw.body));
   const { interaction, stem } = buildInteraction(rows, issues);
   const solutionLines = raw.solutions.flatMap((s) => s.lines);
   const solution = solutionLines.map((l) => l.text);
@@ -58,10 +58,10 @@ export function buildQuestion(raw: RawQuestion, catalog: CatalogId, pages: Map<n
 
 function buildInteraction(rows: BodyRow[], issues: string[]): { interaction: Interaction; stem: string[] } {
   const fields = rows.flatMap((r) => r.cells.flatMap((c) => (c.kind === "field" ? [c.field] : [])));
-  if (fields.length === 0) return { interaction: { kind: "open" }, stem: reflow(rows).map(rowToText) };
+  if (fields.length === 0) return blankAnswer(reflow(rows)) ?? { interaction: { kind: "open" }, stem: reflow(rows).map(rowToText) };
 
   const optionRows = assignOptionRows(rows, new Set(fields.filter((f) => f.radioButton)));
-  const radioGroups = groupRadios(rows, fields, optionRows);
+  const radioGroups = mergeStrayRadios(rows, groupRadios(rows, fields, optionRows));
   const onlyOneRadioGroup = radioGroups.size === 1 && fields.every((f) => f.radioButton);
 
   if (onlyOneRadioGroup) {
@@ -124,6 +124,27 @@ function buildInteraction(rows: BodyRow[], issues: string[]): { interaction: Int
   return { interaction: { kind: "gaps", ...inReadingOrder(formRows, gaps) }, stem };
 }
 
+/**
+ * An answer sentence with a blank but no input field ("Antwort: Der COP beträgt ⇥ ."):
+ * the field is missing in the PDF, so the blank becomes a text gap.
+ */
+function blankAnswer(rows: FlowRow[]): { interaction: Interaction; stem: string[] } | null {
+  const at = rows.findIndex((r) => r.cells.length === 1 && /^Antwort:.*\t\s*\.?\s*$/.test(rowToText(r)));
+  if (at < 0) return null;
+  const text = rowToText(rows[at]!);
+  const tab = text.lastIndexOf("\t");
+  const after = text.slice(tab + 1).trim();
+  const row: Row = [{ text: text.slice(0, tab).trimEnd() }, { gap: 0 }, ...(after ? [{ text: after }] : [])];
+  return {
+    interaction: {
+      kind: "gaps",
+      rows: [row, ...rows.slice(at + 1).map((r): Row => [{ text: rowToText(r) }])],
+      gaps: [{ kind: "text", expected: null }],
+    },
+    stem: rows.slice(0, at).map(rowToText),
+  };
+}
+
 /** Renumbers gaps by first appearance so gap 0 is the first one the learner sees. */
 function inReadingOrder(rows: Row[], gaps: Gap[]): { rows: Row[]; gaps: Gap[] } {
   const order: number[] = [];
@@ -170,6 +191,88 @@ function groupRadios(rows: BodyRow[], fields: WidgetData[], optionRows: Map<Widg
     }
   }
   return groups;
+}
+
+/**
+ * A single radio button can't be a choice of its own. It usually carries the name
+ * of a neighbouring question's group by mistake (WG 2.1.1.09: "105 %" belongs to
+ * 2.1.1.08), so it joins the group of the button right above or below it.
+ */
+function mergeStrayRadios(rows: BodyRow[], groups: Map<string, WidgetData[]>): Map<string, WidgetData[]> {
+  const placed = rows.flatMap((row) => row.cells.flatMap((c) => (c.kind === "field" && c.field.radioButton ? [{ row, field: c.field }] : [])));
+  const groupOf = new Map<WidgetData, string>();
+  for (const [name, buttons] of groups) for (const b of buttons) groupOf.set(b, name);
+  for (const [name, [button]] of [...groups].filter(([, b]) => b.length === 1)) {
+    const i = placed.findIndex((p) => p.field === button);
+    const neighbour = [placed[i - 1], placed[i + 1]].find(
+      (p) =>
+        p &&
+        p.row.page === placed[i]!.row.page &&
+        Math.abs(p.field.rect[0] - button!.rect[0]) < 3 &&
+        Math.abs(p.row.y - placed[i]!.row.y) < p.row.size * 2.5 &&
+        groups.get(groupOf.get(p.field)!)!.length > 1,
+    );
+    if (!neighbour) continue;
+    const target = groupOf.get(neighbour.field)!;
+    const order = (b: WidgetData) => placed.findIndex((p) => p.field === b);
+    groups.set(target, [...groups.get(target)!, button!].sort((a, b) => order(a) - order(b)));
+    groups.delete(name);
+  }
+  return groups;
+}
+
+/**
+ * Some PDFs print the options of a choice without radio buttons (WG 2.1.4.62 e).
+ * Rows without fields that are indented exactly like the question's real options
+ * (and aren't continuation lines of one) get a synthetic button.
+ */
+function addMissingRadios(rows: BodyRow[]): BodyRow[] {
+  const real = rows.flatMap((row) => row.cells.flatMap((c) => (c.kind === "field" && c.field.radioButton ? [{ row, field: c.field }] : [])));
+  if (real.length === 0) return rows;
+  const optionX = real.flatMap(({ row }) => row.cells.flatMap((c) => (c.kind === "text" ? [c.x] : [])).slice(0, 1));
+  const inOption = new Set([...assignOptionRows(rows, new Set(real.map((r) => r.field))).values()].flat());
+  const looksLikeOption = (r: BodyRow) =>
+    !inOption.has(r) && r.cells.length === 1 && r.cells[0]!.kind === "text" && optionX.some((x) => Math.abs(x - r.x0) < 1.5);
+
+  // Runs of such rows; a row close below the previous one continues its option.
+  const starts: BodyRow[][] = [];
+  let run: BodyRow[] = [];
+  const flush = () => {
+    if (run.length >= 2) starts.push(run);
+    run = [];
+  };
+  let prev: BodyRow | null = null;
+  for (const row of rows) {
+    if (!looksLikeOption(row)) {
+      flush();
+      prev = null;
+      continue;
+    }
+    const continuation = prev && prev.page === row.page && prev.y - row.y <= row.size * 1.32;
+    if (prev && prev.page !== row.page) flush();
+    if (!continuation) run.push(row);
+    prev = row;
+  }
+  flush();
+  if (starts.length === 0) return rows;
+
+  const [x0, , x1] = real[0]!.field.rect;
+  const synthetic = new Map<BodyRow, BodyRow>();
+  for (const group of starts) {
+    const name = `fehlt#${group[0]!.page}-${Math.round(group[0]!.y)}`;
+    for (const row of group) {
+      const field: WidgetData = {
+        id: `${name}-${Math.round(row.y)}`,
+        fieldName: name,
+        fieldType: "Btn",
+        rect: [x0, row.y - 3, x1, row.y + 8],
+        hidden: false,
+        radioButton: true,
+      };
+      synthetic.set(row, { ...row, x0, cells: [{ kind: "field", x: x0, xEnd: x1, field }, ...row.cells] });
+    }
+  }
+  return rows.map((r) => synthetic.get(r) ?? r);
 }
 
 /** Rows that make up each radio option: the row with the button plus indented continuation lines. */

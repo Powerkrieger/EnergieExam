@@ -26,7 +26,8 @@ export interface SegmentResult {
   title: string | null;
 }
 
-const HEADER = /^Frage\s+(\d+)\s*:\s*(.*)$/;
+// The colon is sometimes missing ("Frage 14 Gebäudekonzepte - …").
+const HEADER = /^Frage\s+(\d+)\s*(?::\s*|\s+)(.*)$/;
 const CODE = /\((\d+(?:\.\d+){1,4}(?:[a-z]|-[A-Z]\d*)?)\)\s*$/;
 const HEADING_SIZE = 17;
 const HEADER_MIN_SIZE = 13;

@@ -44,10 +44,16 @@ export function buildRows(body: BodyItem[]): BodyRow[] {
     // An answer column has several fields aligned at the same x.
     const inColumn = (f: WidgetData) =>
       f.rect[0] > ANSWER_COLUMN_X && fields.some((o) => o !== f && Math.abs(o.rect[0] - f.rect[0]) < 4);
+    const rest: { f: WidgetData; line: Line | undefined }[] = [];
     for (const f of fields) {
       const line = bandLine(f, lines);
       const textAfter = line?.runs.some((r) => r.x >= f.rect[2] - 1) ?? false;
       if (line && textAfter) attach(line, f);
+      else rest.push({ f, line });
+    }
+    for (const { f, line } of rest) {
+      // The last field of a line with inline fields ("Formelzeichen: [ ], Einheit: [ ]") stays on it.
+      if (line && fieldsByLine.has(line)) attach(line, f);
       else if (inColumn(f)) column.push(f);
       else if (line) attach(line, f);
       else loose.push(f);
