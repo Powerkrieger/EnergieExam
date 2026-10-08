@@ -6,18 +6,41 @@ import { reviewed } from "../selection.ts";
 import { PART_NAMES, useStore } from "../store.tsx";
 
 export function HomeScreen() {
-  const { questions, progress, docOf, settings, updateSettings, formulas } = useStore();
+  const { questions, progress, docOf, settings, updateSettings, formulas, marks } = useStore();
   const { catalog } = useCatalog();
   const startReview = () => {
     updateSettings({ reviewMode: true });
     navigate("review");
   };
-  const wrong = questions.filter((q) => docOf(q.key).startsWith(`${catalog}-`) && progress[q.key]?.last === "wrong");
+  const inCatalog = questions.filter((q) => docOf(q.key).startsWith(`${catalog}-`));
+  const wrong = inCatalog.filter((q) => progress[q.key]?.last === "wrong").length;
+  const marked = inCatalog.filter((q) => marks.has(q.key)).length;
 
   return (
     <div className="screen">
       <CatalogSwitch />
       {settings.reviewMode && <ReviewNextStep catalog={catalog} />}
+
+      {(wrong > 0 || marked > 0) && (
+        <section className="card">
+          <h2>Wiederholen</h2>
+          <div className="buttons">
+            {wrong > 0 && (
+              <a className="button" href={href("learn", { mode: "wrong", catalog })}>
+                Fehlerfragen ({wrong})
+              </a>
+            )}
+            {marked > 0 && (
+              <a className="button" href={href("learn", { mode: "marked", catalog })}>
+                ★ Schwere Fragen ({marked})
+              </a>
+            )}
+          </div>
+          <p className="small muted">
+            Fehlerfragen bleiben hier, bis Sie sie richtig beantworten. Mit ☆ markieren Sie eine Frage als schwer.
+          </p>
+        </section>
+      )}
 
       {([1, 2, 3] as const).map((part) => {
         const id = `${catalog}-${part}`;
@@ -65,11 +88,6 @@ export function HomeScreen() {
 
       <section className="card">
         <div className="buttons">
-          {wrong.length > 0 && (
-            <a className="button" href={href("learn", { mode: "wrong", catalog })}>
-              Fehlerfragen ({wrong.length})
-            </a>
-          )}
           {formulas && (
             <a className="button" href={href("formulas")}>
               Formelsammlung

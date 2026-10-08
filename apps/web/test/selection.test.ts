@@ -41,3 +41,20 @@ describe("guided review", () => {
     expect(reviewStep(qs, priority, none)).toEqual({ kind: "done" });
   });
 });
+
+describe("learning sessions", () => {
+  const qs = [question(1, 0), question(2, 0), question(3, 0)];
+
+  it("collects the questions answered wrong last time", () => {
+    const progress = {
+      "WG/1": { box: 0, seen: 1, right: 0, last: "wrong", lastAt: 0, dueAt: 0 },
+      "WG/2": { box: 1, seen: 2, right: 1, last: "right", lastAt: 0, dueAt: 0 },
+    } as const;
+    expect(selectQuestions(qs, progress, "wrong", {})).toEqual(["WG/1"]);
+  });
+
+  it("collects the questions marked as difficult", () => {
+    expect(selectQuestions(qs, {}, "marked", { marks: new Set(["WG/3", "WG/1"]) })).toEqual(["WG/1", "WG/3"]);
+    expect(selectQuestions(qs, {}, "marked", {})).toEqual([]);
+  });
+});

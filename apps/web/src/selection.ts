@@ -1,6 +1,6 @@
 import { type AnnotatedQuestion, isDue, type Question, type QuestionProgress } from "@exam/core";
 
-export type Mode = "due" | "order" | "wrong" | "review";
+export type Mode = "due" | "order" | "wrong" | "marked" | "review";
 export type ReviewFilter = "unsure" | "sample" | "wrong" | "unclear" | "all";
 
 export function resolved(q: Question): boolean {
@@ -72,6 +72,7 @@ export function selectQuestions(
     chapter?: string;
     review?: ReviewFilter;
     priority?: (key: string) => number;
+    marks?: Set<string>;
   },
 ): string[] {
   let qs = all;
@@ -83,6 +84,8 @@ export function selectQuestions(
       return qs.map((q) => q.key);
     case "wrong":
       return qs.filter((q) => progress[q.key]?.last === "wrong").map((q) => q.key);
+    case "marked":
+      return qs.filter((q) => filter.marks?.has(q.key)).map((q) => q.key);
     case "due": {
       // Due repetitions (lowest box first), then new questions in catalogue order.
       const seen = qs.filter((q) => progress[q.key] && isDue(progress[q.key]));

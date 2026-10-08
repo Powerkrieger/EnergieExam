@@ -25,17 +25,22 @@ interface Schema extends DBSchema {
   formulas: { key: "index"; value: FormulaIndex };
   progress: { key: string; value: QuestionProgress };
   reviews: { key: string; value: QuestionAnnotation };
+  /** Questions the learner marked as difficult (value: when). */
+  marks: { key: string; value: number };
   settings: { key: "settings"; value: Settings };
 }
 
-const db = openDB<Schema>("energieberatung", 1, {
-  upgrade(d) {
-    d.createObjectStore("files");
-    d.createObjectStore("catalogs");
-    d.createObjectStore("formulas");
-    d.createObjectStore("progress");
-    d.createObjectStore("reviews");
-    d.createObjectStore("settings");
+const db = openDB<Schema>("energieberatung", 2, {
+  upgrade(d, oldVersion) {
+    if (oldVersion < 1) {
+      d.createObjectStore("files");
+      d.createObjectStore("catalogs");
+      d.createObjectStore("formulas");
+      d.createObjectStore("progress");
+      d.createObjectStore("reviews");
+      d.createObjectStore("settings");
+    }
+    if (oldVersion < 2) d.createObjectStore("marks");
   },
 });
 
@@ -43,7 +48,7 @@ export const DEFAULT_SETTINGS: Settings = { reviewMode: false, catalog: "WG" };
 
 export async function loadAll() {
   const d = await db;
-  const [catalogs, catalogIds, formulas, progressKeys, progressValues, reviewKeys, reviewValues, settings] =
+  const [catalogs, catalogIds, formulas, progressKeys, progressValues, reviewKeys, reviewValues, marks, settings] =
     await Promise.all([
       d.getAll("catalogs"),
       d.getAllKeys("catalogs"),
@@ -52,6 +57,7 @@ export async function loadAll() {
       d.getAll("progress"),
       d.getAllKeys("reviews"),
       d.getAll("reviews"),
+      d.getAllKeys("marks"),
       d.get("settings", "settings"),
     ]);
   return {
@@ -59,6 +65,7 @@ export async function loadAll() {
     formulas: formulas ?? null,
     progress: Object.fromEntries(progressKeys.map((k, i) => [k, progressValues[i]!])),
     reviews: Object.fromEntries(reviewKeys.map((k, i) => [k, reviewValues[i]!])),
+    marks: new Set(marks),
     settings: { ...DEFAULT_SETTINGS, ...settings },
   };
 }
@@ -84,6 +91,12 @@ export async function saveReview(key: string, a: QuestionAnnotation | null) {
   const d = await db;
   if (a) await d.put("reviews", a, key);
   else await d.delete("reviews", key);
+}
+
+export async function saveMark(key: string, marked: boolean) {
+  const d = await db;
+  if (marked) await d.put("marks", Date.now(), key);
+  else await d.delete("marks", key);
 }
 
 export async function saveSettings(s: Settings) {

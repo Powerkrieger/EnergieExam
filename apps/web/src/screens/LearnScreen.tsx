@@ -18,6 +18,7 @@ const TITLES: Record<Mode, string> = {
   due: "Lernen",
   order: "Alle Fragen",
   wrong: "Fehlerfragen",
+  marked: "Schwere Fragen",
   review: "Prüfung",
 };
 
@@ -31,7 +32,7 @@ export function LearnScreen({ route }: { route: Route }) {
   const current = useCatalog().catalog;
 
   // The question list is fixed when the session starts, so answering doesn't reshuffle it.
-  const keys = useMemo(() => {
+  const initial = useMemo(() => {
     const pool = catalog ? store.questions.filter((q) => store.docOf(q.key).startsWith(`${catalog}-`)) : store.questions;
     return selectQuestions(pool, store.progress, mode, {
       doc: store.docOf,
@@ -39,10 +40,19 @@ export function LearnScreen({ route }: { route: Route }) {
       chapter,
       review,
       priority: store.priorityOf,
+      marks: store.marks,
     });
   }, [route.query.toString()]); // eslint-disable-line react-hooks/exhaustive-deps
+  // A repeat round of this session's wrong or skipped questions.
+  const [repeat, setRepeat] = useState<string[] | null>(null);
+  const keys = repeat ?? initial;
   const [index, setIndex] = useState(0);
-  const [right, setRight] = useState(0);
+  /** Latest result per question of this session; skipped questions have none. */
+  const [results, setResults] = useState<Record<string, boolean>>({});
+  const startRepeat = (k: string[]) => {
+    setRepeat(k);
+    setIndex(0);
+  };
 
   const q = store.byKey.get(keys[index] ?? "");
   const title =
@@ -81,14 +91,33 @@ export function LearnScreen({ route }: { route: Route }) {
     );
   }
   if (!q) {
+    // Sums up the whole session, including repeat rounds.
+    const wrong = initial.filter((k) => results[k] === false);
+    const skipped = initial.filter((k) => !(k in results));
+    const right = initial.length - wrong.length - skipped.length;
     return (
       <div className="screen">
         <h1>Geschafft!</h1>
         <p>
-          {right} von {keys.length} Fragen richtig.
+          {right} von {initial.length} Fragen richtig
+          {wrong.length > 0 && ` · ${wrong.length} falsch`}
+          {skipped.length > 0 && ` · ${skipped.length} übersprungen`}.
         </p>
+        {wrong.length > 0 && (
+          <p className="small muted">Falsch beantwortete Fragen finden Sie auch später unter „Fehlerfragen“.</p>
+        )}
         <div className="buttons">
-          <a className="button primary" href={href("")}>
+          {wrong.length > 0 && (
+            <button className="primary" onClick={() => startRepeat(wrong)}>
+              Falsche wiederholen ({wrong.length})
+            </button>
+          )}
+          {skipped.length > 0 && (
+            <button className={wrong.length ? "" : "primary"} onClick={() => startRepeat(skipped)}>
+              Übersprungene beantworten ({skipped.length})
+            </button>
+          )}
+          <a className={`button ${wrong.length || skipped.length ? "" : "primary"}`} href={href("")}>
             Zur Übersicht
           </a>
         </div>
@@ -102,6 +131,7 @@ export function LearnScreen({ route }: { route: Route }) {
         <span>
           {title}
           {chapter && ` · ${chapter}`}
+          {repeat && " · Wiederholung"}
         </span>
         <span className="muted">
           {index + 1} / {keys.length}
@@ -114,8 +144,9 @@ export function LearnScreen({ route }: { route: Route }) {
       )}
       <QuestionView
         question={q}
-        onResult={(ok) => ok && setRight((n) => n + 1)}
+        onResult={(ok) => setResults((r) => ({ ...r, [q.key]: ok }))}
         onNext={() => setIndex((n) => n + 1)}
+        onSkip={mode === "review" ? undefined : () => setIndex((n) => n + 1)}
       />
       {mode === "review" && (
         <div className="buttons spaced">

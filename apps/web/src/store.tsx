@@ -25,6 +25,8 @@ interface Data {
   formulas: FormulaIndex | null;
   progress: Record<string, QuestionProgress>;
   reviews: Record<string, QuestionAnnotation>;
+  /** Keys of questions marked as difficult. */
+  marks: Set<string>;
   settings: db.Settings;
 }
 
@@ -53,6 +55,7 @@ interface Store extends Data {
   unexported: (key: string) => boolean;
   importPdfs(files: File[], onProgress: (p: ImportProgress) => void): Promise<ImportResult[]>;
   record(key: string, right: boolean): void;
+  toggleMark(key: string): void;
   setReview(key: string, a: QuestionAnnotation | null): void;
   updateSettings(s: Partial<db.Settings>): void;
   exportReviews(): AnnotationFile;
@@ -143,6 +146,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const p = recordResult(data.progress[key], right);
         setData((d) => d && { ...d, progress: { ...d.progress, [key]: p } });
         void db.saveProgress(key, p);
+      },
+
+      toggleMark(key) {
+        const marked = !data.marks.has(key);
+        setData((d) => {
+          if (!d) return d;
+          const marks = new Set(d.marks);
+          if (marked) marks.add(key);
+          else marks.delete(key);
+          return { ...d, marks };
+        });
+        void db.saveMark(key, marked);
       },
 
       setReview(key, a) {

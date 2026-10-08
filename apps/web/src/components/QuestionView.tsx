@@ -21,10 +21,13 @@ interface Props {
   /** Called once the learner's result is known (graded or self-assessed). */
   onResult?: (right: boolean) => void;
   onNext?: () => void;
+  /** Offers to skip the question without answering it. */
+  onSkip?: () => void;
 }
 
-export function QuestionView({ question: q, onResult, onNext }: Props) {
-  const { docOf, record, settings, formulas } = useStore();
+export function QuestionView({ question: q, onResult, onNext, onSkip }: Props) {
+  const { docOf, record, settings, formulas, marks, toggleMark } = useStore();
+  const marked = marks.has(q.key);
   const doc = docOf(q.key);
   const [response, setResponse] = useState<Response>(() => emptyResponse(q));
   const [result, setResult] = useState<Grade | null>(null);
@@ -63,8 +66,18 @@ export function QuestionView({ question: q, onResult, onNext }: Props) {
   return (
     <article className="question">
       <header className="question-head">
-        <div className="muted small">
-          {catalogLabel(doc)} · Frage {q.number} ({q.code})
+        <div className="question-meta">
+          <span className="muted small">
+            {catalogLabel(doc)} · Frage {q.number} ({q.code})
+          </span>
+          <button
+            className={`mark ${marked ? "on" : ""}`}
+            aria-pressed={marked}
+            title={marked ? "Markierung entfernen" : "Als schwer markieren"}
+            onClick={() => toggleMark(q.key)}
+          >
+            {marked ? "★ Schwer" : "☆ Schwer"}
+          </button>
         </div>
         <h2>{q.topic}</h2>
       </header>
@@ -144,9 +157,12 @@ export function QuestionView({ question: q, onResult, onNext }: Props) {
       </section>
 
       {!checked ? (
-        <button className="primary" onClick={check}>
-          {i.kind === "open" ? "Lösung anzeigen" : "Prüfen"}
-        </button>
+        <div className="buttons spaced">
+          <button className="primary" onClick={check}>
+            {i.kind === "open" ? "Lösung anzeigen" : "Prüfen"}
+          </button>
+          {onSkip && <button onClick={onSkip}>Überspringen →</button>}
+        </div>
       ) : (
         <ResultBanner overall={result.overall} verdict={verdict} onSelfAssess={finish} />
       )}
