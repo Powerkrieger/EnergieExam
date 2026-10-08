@@ -76,7 +76,7 @@ input[type="search"] { width: 100%; margin: 8px 0; }
 .question { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
 .question-head h2 { margin-top: 2px; }
 .question-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-button.mark { min-height: 0; padding: 4px 10px; font-size: 0.85rem; background: none; color: var(--muted); }
+button.mark { flex-shrink: 0; white-space: nowrap; min-height: 0; padding: 4px 10px; font-size: 0.85rem; background: none; color: var(--muted); }
 button.mark.on { background: var(--amber-light); color: inherit; font-weight: 600; }
 .stem { margin: 0.5rem 0; }
 .pdf-region { margin: 8px 0; overflow: hidden; cursor: zoom-in; }
