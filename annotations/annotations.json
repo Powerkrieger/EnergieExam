@@ -1,6 +1,1844 @@
 {
   "format": "bafa-trainer-annotations",
   "version": 1,
-  "exportedAt": "2026-10-06T00:00:00.000Z",
-  "questions": {}
+  "exportedAt": "2026-10-08T22:44:59.146Z",
+  "questions": {
+    "WG/1.1.1.10": {
+      "hash": "6f39859a505dfceb",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 0
+      },
+      "reviewedAt": "2026-10-08T09:50:13.613Z"
+    },
+    "WG/1.1.2.07": {
+      "hash": "bc7f182852b76ddc",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "70"
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:05:07.945Z"
+    },
+    "WG/1.1.4.02": {
+      "hash": "3384f18adc46a8c0",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 2
+      },
+      "reviewedAt": "2026-10-08T09:42:33.934Z"
+    },
+    "WG/1.1.4.06": {
+      "hash": "9fc19d5c5eea5bca",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 4
+          },
+          {
+            "correct": 5
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T13:40:48.155Z"
+    },
+    "WG/1.1.4.09": {
+      "hash": "a693873808444dad",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "2,046 ~ 2,0 W/(m²K)"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:53:54.970Z"
+    },
+    "WG/1.1.4.31": {
+      "hash": "8979770d1fd2c303",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "0,115 m"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:07:02.817Z",
+      "formulas": [
+        "waermetransport-waermeschutz/waermedurchgangskoeffizient-spezifisch-bezogen-auf-1-m2",
+        "waermetransport-waermeschutz/erforderliche-daemmschichtdicke-bei-sanierung-auf-neuen-u-wert"
+      ]
+    },
+    "WG/1.1.4.33": {
+      "hash": "3235fec8671915c4",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "10"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T13:44:19.630Z",
+      "formulas": [
+        "waermetransport-waermeschutz/erforderliche-daemmschichtdicke-bei-sanierung-auf-neuen-u-wert"
+      ]
+    },
+    "WG/1.1.5.09": {
+      "hash": "6efc6407a5a5055b",
+      "status": "wrong",
+      "reviewedAt": "2026-10-07T13:48:47.444Z",
+      "note": "Die letzten beiden Lücken sind getauscht. Formelzeichen [frsi-Wert] und Einheit [-]"
+    },
+    "WG/1.1.5.11": {
+      "hash": "f5abced94312ae85",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "0,56"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:07:48.873Z",
+      "formulas": [
+        "feuchtetransport-feuchteschutz/oberflaechentemperatur-im-bereich-von-waermebruecken"
+      ]
+    },
+    "WG/1.1.5.14": {
+      "hash": "105c584533a02cae",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "15 °C"
+          },
+          {
+            "expected": "58,3 %"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:10:31.955Z",
+      "formulas": [
+        "feuchtetransport-feuchteschutz/vermeidung-von-tauwasserbildung",
+        "feuchtetransport-feuchteschutz/vermeidung-von-schimmelpilz"
+      ]
+    },
+    "WG/1.1.5.15": {
+      "hash": "276cc5f3367f36ea",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "48 %"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:11:30.267Z",
+      "formulas": [
+        "feuchtetransport-feuchteschutz/vermeidung-von-schimmelpilz"
+      ]
+    },
+    "WG/1.1.6.08": {
+      "hash": "2fce75b15b22ed89",
+      "answer": {
+        "kind": "single",
+        "correct": 1
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T13:51:08.913Z"
+    },
+    "WG/1.2.2.02": {
+      "hash": "f00bdf82b3d128e4",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "Grobspanplatte"
+          },
+          {
+            "expected": "Bläh , Perlitplatte"
+          },
+          {
+            "expected": "Korkplatte"
+          },
+          {
+            "expected": "Holzfaser"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:12:38.512Z"
+    },
+    "WG/1.2.2.03": {
+      "hash": "ce8bcd9fc9187179",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "Polyurethan"
+          },
+          {
+            "expected": "Expandiertes Polystyrol"
+          },
+          {
+            "expected": "Extrudiertes Polystyrol"
+          },
+          {
+            "expected": "Schaumglas"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:13:01.041Z"
+    },
+    "WG/1.3.1.17": {
+      "hash": "2f97889894638c40",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 2
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 2
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T13:55:49.134Z"
+    },
+    "WG/1.3.3.15": {
+      "hash": "793dd1b81b30deee",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 1
+      },
+      "reviewedAt": "2026-10-08T09:45:29.540Z"
+    },
+    "WG/1.3.3.16": {
+      "hash": "93d8b2af1cf6385d",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 0
+      },
+      "reviewedAt": "2026-10-08T09:46:19.281Z"
+    },
+    "WG/1.4.06": {
+      "hash": "88a63eae91a8f257",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "das Differenzdruckverfahren"
+          },
+          {
+            "expected": "eine stationäre"
+          },
+          {
+            "expected": "einem Gebläse"
+          },
+          {
+            "expected": "eines verstellbaren Rahmens"
+          },
+          {
+            "expected": "luftdicht"
+          },
+          {
+            "expected": "ein Volumenstrom"
+          },
+          {
+            "expected": "der Luftmenge"
+          },
+          {
+            "expected": "die Leckagen"
+          },
+          {
+            "expected": "die Luftwechselrate n50"
+          },
+          {
+            "expected": "das Luftvolumen"
+          },
+          {
+            "expected": "oft"
+          },
+          {
+            "expected": "die hüllflächenbezogene Luftdurchlässigkeit q50"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:00:27.234Z"
+    },
+    "WG/1.5.12": {
+      "hash": "2e57595ccd7cad33",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "0.132"
+          },
+          {
+            "expected": "0,092"
+          },
+          {
+            "correct": 1
+          },
+          {
+            "expected": "0,69"
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:49:49.684Z"
+    },
+    "WG/2.1.1.09": {
+      "hash": "75199fdfceeec112",
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:04:06.992Z",
+      "note": "Single Choice Frage, Antwort 30% ist richtig, aber die Auswahlmöglichkeiten sind als Multiple Choice fragen auszuwählen ",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          null
+        ]
+      }
+    },
+    "WG/2.1.2.10": {
+      "hash": "8ca57871500dd9d1",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 3
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:08:10.928Z"
+    },
+    "WG/2.1.2.19": {
+      "hash": "cca9ba5bad2bed3e",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "9,5 kWh/m³"
+          },
+          {
+            "expected": "17613 kWh"
+          },
+          {
+            "expected": "17930 kWh"
+          },
+          {
+            "expected": "1,02"
+          },
+          {
+            "expected": "1,02"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:13:57.288Z",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermeerzeugung-jahresnutzungsgrad"
+      ]
+    },
+    "WG/2.1.3.07": {
+      "hash": "48b128f3005a03e4",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "Kohlenstoff (C)"
+          },
+          {
+            "expected": "Wasserstoff (H)"
+          },
+          {
+            "expected": "Sauerstoff (O)"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:15:39.715Z"
+    },
+    "WG/2.1.3.08": {
+      "hash": "f5679ec363aaf692",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "32500 kWh"
+          },
+          {
+            "expected": "3250 l"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:17:08.715Z"
+    },
+    "WG/2.1.3.09": {
+      "hash": "5dceb1127893fda3",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:18:45.415Z"
+    },
+    "WG/2.1.3.23": {
+      "hash": "32ce45f311bf4368",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 1
+      },
+      "reviewedAt": "2026-10-08T09:50:56.686Z"
+    },
+    "WG/2.1.4.01": {
+      "hash": "3965728acbd3485f",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:20:12.026Z"
+    },
+    "WG/2.1.4.05": {
+      "hash": "537cb8a5fa52b5a3",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "7,9 kW"
+          },
+          {
+            "expected": "11,2 kW"
+          },
+          {
+            "expected": "8,6 kW"
+          },
+          {
+            "expected": "12,3 kW"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:23:32.784Z",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-leistungszahl-carnot-wirkungsgrad"
+      ]
+    },
+    "WG/2.1.4.13": {
+      "hash": "03e130a784597160",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:31:44.305Z"
+    },
+    "WG/2.1.4.31": {
+      "hash": "35caaa1ad375d032",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "2.590 l/h ~ 2.600 l/h"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:16:47.901Z",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-kaelteleistung",
+        "waermetransport-waermeschutz/waermemenge"
+      ]
+    },
+    "WG/2.1.4.36": {
+      "hash": "f3a34b41a4c40573",
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:19:24.738Z",
+      "note": "Musterlösung ist richtig, aber Antwortsatz fehlt, da soll man eigentlich das Ergebnis eintragen.",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-leistungszahl-carnot-wirkungsgrad"
+      ]
+    },
+    "WG/2.1.4.37": {
+      "hash": "0eb133e282d90974",
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:20:30.088Z",
+      "note": "Antwortsatz muss man ausfüllen können mit der Lösung",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-leistungszahl-carnot-wirkungsgrad"
+      ]
+    },
+    "WG/2.1.4.51-A": {
+      "hash": "d7dde05a571a72b4",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "expected": "10,93"
+          },
+          {
+            "expected": "3,47"
+          },
+          {
+            "expected": "7,78"
+          },
+          {
+            "expected": "20.221"
+          },
+          {
+            "expected": "14.393"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:22:36.801Z"
+    },
+    "WG/2.1.4.51-B": {
+      "hash": "0bb45c641fc25ab9",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "11,24"
+          },
+          {
+            "expected": "2,8 %"
+          },
+          {
+            "expected": "3,76"
+          },
+          {
+            "expected": "7,8 %"
+          },
+          {
+            "expected": "8,41"
+          },
+          {
+            "expected": "8,1 %"
+          },
+          {
+            "expected": "1.799"
+          },
+          {
+            "expected": "-0,8 %"
+          },
+          {
+            "expected": "20.221"
+          },
+          {
+            "expected": "0 %"
+          },
+          {
+            "expected": "14.842"
+          },
+          {
+            "expected": "3,1 %"
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:40:37.416Z",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-kaelteleistung"
+      ]
+    },
+    "WG/2.1.4.56": {
+      "hash": "a75f1e1925deb3df",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "4°C"
+          },
+          {
+            "expected": "12°C"
+          },
+          {
+            "expected": "108 l"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T14:44:06.109Z",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermemenge-gespeicherte-waerme"
+      ]
+    },
+    "WG/2.1.4.57": {
+      "hash": "3c10b237ea1521e5",
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:24:33.440Z"
+    },
+    "WG/2.1.4.62": {
+      "hash": "c60472f2eb588e6b",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "59 dB(A)"
+          },
+          {
+            "expected": "53 dB(A)"
+          },
+          {
+            "expected": "5,5m"
+          },
+          {
+            "expected": "45,2 dB(A)"
+          },
+          {
+            "correct": 0
+          },
+          {
+            "expected": "39,2 dB(A)"
+          },
+          {
+            "correct": 0
+          },
+          {
+            "expected": "33,2 dB(A)"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:02:57.150Z",
+      "note": "Da ist bei e ein Fehler unterlaufen. Die frage ist wieder ob es erfüllt ist oder nicht, es ist erfüllt. Und da sind auch ganz zum Schluss wieder auf die Frage drei antwortmöglichkeiten und die letzte ist richtig."
+    },
+    "WG/2.1.4.64": {
+      "hash": "eae48ceb0312f905",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "-7 °C"
+          },
+          {
+            "expected": "6 °C bis 15°C"
+          },
+          {
+            "expected": "7 °C bis 6°C"
+          },
+          {
+            "expected": "32,2 %"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:06:57.388Z"
+    },
+    "WG/2.1.4.65": {
+      "hash": "e1ec0b07e9677af9",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "13,5 kW"
+          },
+          {
+            "expected": "7,63 kW"
+          },
+          {
+            "expected": "4.138 m³/h"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:10:29.732Z",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/waermepumpe-kaelteleistung",
+        "lueftung/waermetransport-aufgrund-von-lueftung"
+      ]
+    },
+    "WG/2.1.5.06": {
+      "hash": "29d4e13818874959",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 0
+      },
+      "reviewedAt": "2026-10-08T09:44:19.935Z"
+    },
+    "WG/2.1.6.03": {
+      "hash": "e3172db611792231",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:26:04.784Z"
+    },
+    "WG/2.2.3.01": {
+      "hash": "eecb9277771fd733",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "42 °C"
+          },
+          {
+            "expected": "29,7 °C"
+          },
+          {
+            "expected": "1,15 kW"
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:13:48.855Z"
+    },
+    "WG/2.2.3.02": {
+      "hash": "e24d023ba484e07f",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "749,6 W"
+          },
+          {
+            "expected": "0,75"
+          },
+          {
+            "expected": "562 W"
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:15:35.008Z"
+    },
+    "WG/2.2.5.11": {
+      "hash": "b46fbc31fefd3c92",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 2
+          },
+          {
+            "expected": "21,3 kW"
+          },
+          {
+            "expected": "666 W/K"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:29:12.286Z",
+      "formulas": [
+        "heizlast/transmissionswaermeverlust-gebaeude-aus-mittlerem-waermedurchgangskoeffizient-eingangsgroessen-und-vorgaben-fuer-vereinfachte-verfahren-nach-din-en-12831-ts1-abschnitt-5",
+        "bilanzierung-wohngebaeude-gemaess-geg-din-v-18599/transmissionswaermetransferkoeffizient-mit-beruecksichtigung-von-waermebruecken"
+      ]
+    },
+    "WG/2.3.05": {
+      "hash": "1ebd21367efd32eb",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "3"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:17:38.707Z"
+    },
+    "WG/2.4.01": {
+      "hash": "c5567c4dca326547",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 2
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:30:08.636Z"
+    },
+    "WG/2.4.02": {
+      "hash": "4f1a42c460031e8a",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:19:06.206Z"
+    },
+    "WG/2.4.04": {
+      "hash": "10c375580541e7bb",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "11,6 K"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:45:03.599Z",
+      "formulas": [
+        "waermetransport-waermeschutz/waermemenge"
+      ]
+    },
+    "WG/2.4.19": {
+      "hash": "e100c3d0f98553d5",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "11581 kWh/a"
+          },
+          {
+            "expected": "12,6 m²"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:21:24.864Z",
+      "formulas": [
+        "heizungstechnik-hydraulik-waermepumpen-solarthermie/solarthermie-auslegung-der-kollektorflaeche"
+      ]
+    },
+    "WG/2.5.1.11": {
+      "hash": "e2e8de7e32b27414",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "1,2"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:23:10.890Z",
+      "formulas": [
+        "lueftung/waermetransport-aufgrund-von-lueftung"
+      ]
+    },
+    "WG/2.5.1.14": {
+      "hash": "1158842d0742ad74",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 0
+      },
+      "reviewedAt": "2026-10-08T09:41:26.551Z"
+    },
+    "WG/2.5.2.03": {
+      "hash": "1211127042a7513c",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "27"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:31:19.982Z"
+    },
+    "WG/2.5.2.04": {
+      "hash": "0cb07a2910fc4025",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "15"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:31:47.353Z"
+    },
+    "WG/2.5.2.08": {
+      "hash": "a0b2730fcc7343e6",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 3
+      },
+      "reviewedAt": "2026-10-08T09:50:35.374Z"
+    },
+    "WG/2.5.2.39": {
+      "hash": "5cbd14de61f0971b",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "0,5"
+          },
+          {
+            "expected": "2 h"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:24:45.592Z"
+    },
+    "WG/2.8.06": {
+      "hash": "2a8f1bb505069e1e",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "90 kWh/Monat"
+          },
+          {
+            "expected": "360 kWh"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:27:36.537Z",
+      "formulas": [
+        "photovoltaik/photovoltaik-pv-ertrag-nach-din-v-18599"
+      ]
+    },
+    "WG/2.8.07": {
+      "hash": "0047cd2e31f23aa8",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "ca. 90 kWh/Monat"
+          },
+          {
+            "expected": "405 kWh"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:28:32.076Z"
+    },
+    "WG/2.8.08": {
+      "hash": "9752f38793c602ad",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "8632 kWh/a"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:29:05.200Z"
+    },
+    "WG/2.8.19": {
+      "hash": "ca7bd9de32f099ed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 2
+          },
+          {
+            "correct": 3
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:29:56.126Z"
+    },
+    "WG/2.9.02": {
+      "hash": "b1c278b47048f076",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "B"
+          },
+          {
+            "expected": "A"
+          },
+          {
+            "expected": "D"
+          },
+          {
+            "expected": "C"
+          },
+          {
+            "expected": "F"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-07T17:31:59.153Z"
+    },
+    "WG/3.1.1.30": {
+      "hash": "b6134f1055d672c3",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 0
+      },
+      "reviewedAt": "2026-10-08T09:46:45.799Z"
+    },
+    "WG/3.1.2.03": {
+      "hash": "d5459438008f4d9b",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "1,853 m²K/W"
+          },
+          {
+            "expected": "1,2 m²K/W"
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:33:35.848Z",
+      "formulas": [
+        "waermetransport-waermeschutz/waermedurchlasswiderstand-ebenes-bauteil"
+      ]
+    },
+    "WG/3.1.3.44": {
+      "hash": "e32750cab12ff7cb",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 4
+      },
+      "reviewedAt": "2026-10-08T09:45:56.756Z"
+    },
+    "WG/3.2.1.04": {
+      "hash": "5ea23eeb46273699",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 2
+      },
+      "reviewedAt": "2026-10-08T09:51:22.012Z"
+    },
+    "WG/3.2.1.13": {
+      "hash": "c6896f00ea602afe",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 2
+      },
+      "reviewedAt": "2026-10-08T09:43:28.044Z"
+    },
+    "WG/3.2.2.01": {
+      "hash": "0fc755cab13c8460",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "B"
+          },
+          {
+            "expected": "A"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:39:44.097Z"
+    },
+    "WG/3.2.2.02": {
+      "hash": "2452dba424b52993",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 2
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:40:22.539Z"
+    },
+    "WG/3.2.2.07": {
+      "hash": "21d517a3218cf79f",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 2
+      },
+      "reviewedAt": "2026-10-08T09:43:06.758Z"
+    },
+    "WG/3.2.2.13": {
+      "hash": "48ce1b99dea4b241",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 2
+          },
+          {
+            "correct": 3
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 4
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:41:30.488Z"
+    },
+    "WG/3.2.2.15": {
+      "hash": "21770f945e0645d3",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 3
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 2
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:42:02.886Z"
+    },
+    "WG/3.2.3.02": {
+      "hash": "b5cd681d75645583",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:43:01.328Z"
+    },
+    "WG/3.2.3.10": {
+      "hash": "df584bc61a0dadd7",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 2
+          },
+          {
+            "correct": 3
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 4
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:43:48.576Z"
+    },
+    "WG/3.2.3.11": {
+      "hash": "768d2092a81fa386",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 6
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 5
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:44:17.188Z"
+    },
+    "WG/3.2.3.14": {
+      "hash": "821b4a74b8512268",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 3
+          },
+          {
+            "correct": 2
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:45:18.525Z"
+    },
+    "WG/3.2.5.05": {
+      "hash": "e242075693eac9ac",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "82,5 kWh/a"
+          },
+          {
+            "expected": "60 kWh"
+          },
+          {
+            "expected": "0,7 a"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:47:27.221Z",
+      "formulas": [
+        "vereinfachte-bilanzierung-ueberschlaegige-berechnungen/die-hier-verwendete-methode-der-vereinfachten-bilanzierung-ist-angelehnt-an-das-heizperiodenbilanzverfahren-nach-enev-2007-welches-fuer-nachweise-und-energieausweise-seit-2009-nicht-mehr-zulaessig-ist-aufgrund-seiner-geringen-komplexitaet-ist-diese-aber-fuer-ueberschlaegige-berechnungen-gut-geeignet-die-hilfsenergie-wird-in-diesem-verfahren-nicht-beruecksichtigt-bauteilbezogener-anteiliger-qh-fx-fgt-abauteil-u-qh-heizwaermebedarf-bauteil-kw-a-heizwaermebedarf-fx-temperaturkorrekturfaktor-fgt-gradtagszahlfaktor-kk-a-abauteil-flaeche-des-zu-betrachtenden-bauteils-in-aussenmassen-m-u-waermedurchgangskoeffizient-w-2-m-k-gradtagszahlfaktor-durchschnittswert-fuer-deutschland-heizungsbetrieb-mit-nachabsenkung-82-kkh-a-laenge-der-heizperiode-275-tage-heizgrenztemperatur-15-c-nicht-saniert-75-kkh-a-laenge-der-heizperiode-220-tage-heizgrenztemperatur-12-c-teilsaniert-66-kkh-a-laenge-der-heizperiode-185-tage-heizgrenztemperatur-10-c-geg-standard-temperaturkorrekturfaktor-nach-din-v-4108-6-1-0-aussenbauteil-dach-als-systemgrenze-0-8-oberste-geschossdecke-abseitenwand-0-5-waende-und-decken-zu-unbeheiztren-raeumen-0-6-unterer-gebaeudeabschluss-kellerdecke-waende-zu-unbeheiztem-keller-fussboden-auf-erdreich-flaechen-des-beheizten-kellers-gegen-erdreich-aequivalenter-u-wert-fenster-uw-eq-uw-g-sf-uw-eq-aequivalenter-u-wert-w-2-m-k-bilanzkennwert-fuer-uw-u-wert-fenster-w-2-m-k-transparente-bauteile-g-gesamtenergiedurchlassgrad-sf-strahlungsgewinnkoeffizient-w-2-m-k-strahlungsgewinnkoeffizient-nach-e-din-ts-18599-2-werte-fuer-einfamilienhaeuser-0-9-w-m-k-nordfassade-1-1-w-m-k-ost-westfassade-und-dachflaechenfenster-neigung-15-1-7-w-m-k-suedfassade-heizenergiebedarf-und-qe-qh-e-qe-heizenergiebedarf-kw-a-heizenergieeinsparung-qe-qe-ist-qe-neu-qh-heizwaermebedarf-kw-a-qe-qh-ist-eist-qh-neu-eneu-e-endenergie-aufwandszahl"
+      ]
+    },
+    "WG/3.3.01": {
+      "hash": "e0f5275b3f7b6a82",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 2
+      },
+      "reviewedAt": "2026-10-08T09:43:51.753Z"
+    },
+    "WG/3.3.09": {
+      "hash": "4da24284e108d1c7",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:49:44.244Z"
+    },
+    "WG/3.3.13": {
+      "hash": "7b0bf3d80e0d4bb0",
+      "note": "Da sind zwei Fragen in eine gerutscht ",
+      "reviewedAt": "2026-10-08T08:52:09.572Z",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 3
+          },
+          {
+            "expected": "20,00 €/(m²a)"
+          },
+          {
+            "correct": 1
+          },
+          {
+            "expected": "8,80 €/(m²a)"
+          },
+          {
+            "correct": 2
+          },
+          {
+            "expected": "7,20 €/(m²a)"
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed"
+    },
+    "WG/3.3.16": {
+      "hash": "100bd0c776042ed7",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:51:52.727Z"
+    },
+    "WG/3.3.17": {
+      "hash": "263ad96b32c216c5",
+      "answer": {
+        "kind": "single",
+        "correct": 0
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:52:37.770Z"
+    },
+    "WG/3.4.03": {
+      "hash": "00192d71044519cb",
+      "status": "confirmed",
+      "answer": {
+        "kind": "single",
+        "correct": 2
+      },
+      "reviewedAt": "2026-10-08T09:42:01.567Z"
+    },
+    "WG/3.4.20": {
+      "hash": "5cbd08b54fd9e08a",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "8,1 a"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:54:00.922Z"
+    },
+    "WG/3.4.33": {
+      "hash": "a8704b97538dac15",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "12.959,26 €"
+          },
+          {
+            "expected": "37.872,83 €"
+          },
+          {
+            "expected": "24.913,57 €"
+          },
+          {
+            "correct": 2
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:55:49.901Z"
+    },
+    "WG/3.4.34": {
+      "hash": "5f9a72baf0741fe0",
+      "status": "confirmed",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "13.499 €"
+          },
+          {
+            "expected": "13.499 €"
+          }
+        ]
+      },
+      "reviewedAt": "2026-10-08T09:48:39.936Z"
+    },
+    "WG/3.4.37": {
+      "hash": "e9c49b76ad1bce4a",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "expected": "2,8 a"
+          },
+          {
+            "expected": "9 a"
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:56:47.677Z"
+    },
+    "WG/3.5.35": {
+      "hash": "c3aa51fda10932be",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:57:30.678Z"
+    },
+    "WG/3.5.49": {
+      "hash": "40f4eeb88a41b8e0",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:58:03.026Z"
+    },
+    "WG/3.5.51": {
+      "hash": "be8ae69e8b510213",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:58:17.744Z"
+    },
+    "WG/3.5.53": {
+      "hash": "6fa81b260019b75b",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:58:39.251Z"
+    },
+    "WG/3.5.59": {
+      "hash": "88c0c8e8d7721120",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:59:07.211Z"
+    },
+    "WG/3.5.60": {
+      "hash": "f4836a5aee189fcd",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:59:31.987Z"
+    },
+    "WG/3.5.61": {
+      "hash": "9dd76862442f37cf",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:59:52.161Z"
+    },
+    "WG/3.5.62": {
+      "hash": "9ca750145c2ec8ee",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:00:09.464Z"
+    },
+    "WG/3.5.64": {
+      "hash": "9f1caeb0a697bb4b",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:00:26.671Z"
+    },
+    "WG/3.5.66": {
+      "hash": "b15aa62858edaadc",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:00:53.505Z"
+    },
+    "WG/3.5.67": {
+      "hash": "6096892343e66391",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 1
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:01:14.631Z"
+    },
+    "WG/3.6.1.06": {
+      "hash": "7d49d12be18a6f3d",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 1
+          },
+          {
+            "correct": 2
+          },
+          {
+            "correct": 3
+          },
+          {
+            "correct": 0
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:02:19.680Z"
+    },
+    "WG/3.6.3.04": {
+      "hash": "214ff8169f4ce238",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
+          {
+            "correct": 5
+          },
+          {
+            "correct": 0
+          },
+          {
+            "correct": 3
+          },
+          {
+            "correct": 4
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T09:03:11.642Z"
+    }
+  }
 }
