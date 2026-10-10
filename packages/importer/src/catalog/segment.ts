@@ -26,8 +26,8 @@ export interface SegmentResult {
   title: string | null;
 }
 
-// The colon is sometimes missing ("Frage 14 Gebäudekonzepte - …").
-const HEADER = /^Frage\s+(\d+)\s*(?::\s*|\s+)(.*)$/;
+// The colon or the space is sometimes missing ("Frage 14 Gebäudekonzepte - …", "Frage12: …").
+const HEADER = /^Frage\s*(\d+)\s*(?::\s*|\s+)(.*)$/;
 const CODE = /\((\d+(?:\.\d+){1,4}(?:[a-z]|-[A-Z]\d*)?)\)\s*$/;
 const HEADING_SIZE = 17;
 const HEADER_MIN_SIZE = 13;
@@ -95,12 +95,18 @@ export function segment(pages: PageData[]): SegmentResult {
         if (/^Änderungen zu Version/.test(line.plain)) continue;
 
         const header = line.size >= HEADER_MIN_SIZE ? HEADER.exec(line.plain) : null;
-        if (header) {
+        // A few headers lack "Frage N:" and only show the topic and code
+        // ("Nachhaltigkeitszertifizierung - … (3.3.10)"); they take the next number.
+        const bare =
+          !header && current && phase !== "header" && line.size >= HEADER_MIN_SIZE ? CODE.exec(line.plain) : null;
+        const newCode = bare && current?.code && normalizeCode(bare[1]!) !== normalizeCode(current.code);
+        if (header || newCode) {
+          const number: number = header ? Number(header[1]) : current!.number + 1;
           close();
           current = {
-            number: Number(header[1]),
+            number,
             code: null,
-            topic: header[2] ?? "",
+            topic: header ? (header[2] ?? "") : line.plain,
             chapter,
             header: { page: item.page, top: item.top, bottom: line.y },
             body: [],

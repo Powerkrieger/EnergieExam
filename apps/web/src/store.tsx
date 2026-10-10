@@ -88,7 +88,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const store = useMemo<Store | null>(() => {
     if (!data) return null;
-    const annotations = mergeAnnotations(bundledAnnotations, data.reviews);
+    const merged = mergeAnnotations(bundledAnnotations, data.reviews);
+    // A local review of an older version of a question mustn't hide a bundled one that fits.
+    const annotations = { ...merged };
     const docs = new Map<string, db.DocId>();
     const priorities = new Map<string, number>();
     const questions: AnnotatedQuestion[] = [];
@@ -96,6 +98,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       for (const q of catalog.questions) {
         docs.set(q.key, id);
         priorities.set(q.key, reviewPriority(q));
+        const local = data.reviews[q.key];
+        if (local && local.hash !== q.hash && bundledAnnotations[q.key]?.hash === q.hash) {
+          annotations[q.key] = bundledAnnotations[q.key]!;
+        }
         questions.push(applyAnnotation(q, annotations[q.key]));
       }
     }
@@ -178,7 +184,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       },
 
       exportReviews() {
-        return { ...emptyAnnotationFile(), questions: annotations };
+        // Includes outdated local reviews, so they can still be migrated when merging.
+        return { ...emptyAnnotationFile(), questions: merged };
       },
 
       importReviews(json) {

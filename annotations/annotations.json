@@ -1369,7 +1369,7 @@
       "reviewedAt": "2026-10-08T09:43:51.753Z"
     },
     "WG/3.3.09": {
-      "hash": "4da24284e108d1c7",
+      "hash": "44d650d8c539cd7e",
       "answer": {
         "kind": "gaps",
         "gaps": [
@@ -1390,7 +1390,17 @@
           },
           {
             "correct": 1
-          },
+          }
+        ]
+      },
+      "status": "confirmed",
+      "reviewedAt": "2026-10-08T08:49:44.244Z"
+    },
+    "WG/3.3.10": {
+      "hash": "969b4c1e1e483db2",
+      "answer": {
+        "kind": "gaps",
+        "gaps": [
           {
             "correct": 1
           },
