@@ -7,6 +7,7 @@ import {
   plainText,
   reflowLines,
   type Response,
+  type Row,
   type Verdict,
 } from "@exam/core";
 import { useEffect, useState } from "react";
@@ -126,28 +127,39 @@ export function QuestionView({ question: q, onResult, onNext, onSkip }: Props) {
 
         {i.kind === "gaps" && response.kind === "gaps" && (
           <div className="gap-rows">
-            {i.rows.map((row, r) => (
-              <div key={r} className="gap-row">
-                {row.map((s, n) =>
-                  "text" in s ? (
-                    <span key={n} className="gap-text">
-                      <RichText text={s.text} />
-                    </span>
-                  ) : (
-                    <GapInput
-                      key={n}
-                      gap={i.gaps[s.gap]!}
-                      value={response.values[s.gap] ?? null}
-                      verdict={result?.gaps[s.gap]}
-                      disabled={checked}
-                      onChange={(v) =>
-                        setResponse({ kind: "gaps", values: response.values.map((x, k) => (k === s.gap ? v : x)) })
-                      }
-                    />
-                  ),
-                )}
-              </div>
-            ))}
+            {layoutRows(i.rows, i.gaps).map((block, r) => {
+              const input = (gap: number) => (
+                <GapInput
+                  gap={i.gaps[gap]!}
+                  value={response.values[gap] ?? null}
+                  verdict={result?.gaps[gap]}
+                  disabled={checked}
+                  onChange={(v) =>
+                    setResponse({ kind: "gaps", values: response.values.map((x, k) => (k === gap ? v : x)) })
+                  }
+                />
+              );
+              return block.kind === "statement" ? (
+                <div key={r} className="statement">
+                  <p>
+                    <RichText text={block.text} />
+                  </p>
+                  {input(block.gap)}
+                </div>
+              ) : (
+                <div key={r} className="gap-row">
+                  {block.row.map((s, n) =>
+                    "text" in s ? (
+                      <span key={n} className="gap-text">
+                        <RichText text={s.text} />
+                      </span>
+                    ) : (
+                      <span key={n}>{input(s.gap)}</span>
+                    ),
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -229,7 +241,23 @@ function GapInput({
 
   return (
     <span className={`gap ${state}`}>
-      {gap.kind === "choice" ? (
+      {isVerdict(gap) ? (
+        <span className="verdict" role="radiogroup">
+          {gap.options.map((o, n) => (
+            <button
+              key={n}
+              type="button"
+              role="radio"
+              aria-checked={value === n}
+              className={value === n ? "on" : solution !== null && n === gap.correct ? "solution" : ""}
+              disabled={disabled}
+              onClick={() => onChange(value === n ? null : n)}
+            >
+              {plainText(o)}
+            </button>
+          ))}
+        </span>
+      ) : gap.kind === "choice" ? (
         <select
           value={typeof value === "number" ? value : ""}
           disabled={disabled}
@@ -252,8 +280,56 @@ function GapInput({
           onChange={(e) => onChange(e.target.value)}
         />
       )}
-      {solution !== null && <span className="gap-solution">{solution}</span>}
+      {solution !== null && !(isVerdict(gap) && gap.correct !== null) && <span className="gap-solution">{solution}</span>}
     </span>
+  );
+}
+
+const POSITIVE = ["richtig", "ja", "trifft zu", "zutreffend", "korrekt", "wahr"];
+const NEGATIVE = ["falsch", "nein", "trifft nicht zu", "nicht zutreffend", "unzutreffend"];
+
+/** A choice between two opposite verdicts ("Trifft zu" / "Trifft nicht zu", "Ja" / "Nein" …). */
+function isVerdict(gap: Gap): gap is Extract<Gap, { kind: "choice" }> {
+  if (gap.kind !== "choice" || gap.options.length !== 2) return false;
+  const words = gap.options.map((o) => plainText(o).toLowerCase().replace(/[.,;!]+$/, "").trim());
+  return words.some((w) => POSITIVE.includes(w)) && words.some((w) => NEGATIVE.includes(w));
+}
+
+type Block = { kind: "row"; row: Row } | { kind: "statement"; text: string; gap: number };
+
+/**
+ * Statement rows ("text … [Trifft zu ▾]") become a statement with its verdict
+ * buttons below. A statement the PDF wrapped onto gap-less lines (the
+ * sentence goes on in lower case) gets those lines back, so the buttons come after it.
+ */
+function layoutRows(rows: Row[], gaps: Gap[]): Block[] {
+  const blocks: Block[] = [];
+  for (let r = 0; r < rows.length; r++) {
+    const row = rows[r]!;
+    const last = row.at(-1);
+    const texts = row.slice(0, -1);
+    if (!last || !("gap" in last) || texts.length === 0 || !texts.every((s) => "text" in s) || !isVerdict(gaps[last.gap]!)) {
+      blocks.push({ kind: "row", row });
+      continue;
+    }
+    let text = texts.map((s) => s.text).join(" ");
+    for (let next = rows[r + 1]; next && isContinuation(text, next); next = rows[r + 1]) {
+      text += " " + next.flatMap((s) => ("text" in s ? [s.text] : [])).join(" ");
+      r++;
+    }
+    blocks.push({ kind: "statement", text, gap: last.gap });
+  }
+  return blocks;
+}
+
+function isContinuation(text: string, next: Row): boolean {
+  const first = next[0];
+  return (
+    !/[.?!:]\s*$/.test(text) &&
+    next.every((s) => "text" in s) &&
+    first !== undefined &&
+    "text" in first &&
+    /^\p{Ll}/u.test(plainText(first.text).trim())
   );
 }
 

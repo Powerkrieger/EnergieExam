@@ -103,6 +103,16 @@ button.mark.on { background: var(--amber-light); color: inherit; font-weight: 60
 .gap.unknown select, .gap.unknown input { border-color: var(--amber); background: var(--amber-light); }
 .gap-solution { font-size: 0.8rem; color: var(--green); font-weight: 600; }
 .gap.unknown .gap-solution { color: var(--amber); }
+.statement { padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.statement p { margin: 0 0 8px; }
+.verdict { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.verdict button { padding: 6px 12px; border-radius: 999px; }
+.verdict button.on { background: var(--green); border-color: var(--green); color: #fff; }
+.verdict button:disabled { opacity: 1; }
+.verdict button:disabled:not(.on):not(.solution) { opacity: 0.5; }
+.gap.wrong .verdict button.on { background: var(--red); border-color: var(--red); }
+.gap.unknown .verdict button.on { background: var(--amber); border-color: var(--amber); }
+.verdict button.solution { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); color: var(--green); font-weight: 600; }
 .tab { display: inline-block; width: 1.5em; }
 
 .banner { margin: 12px 0; padding: 10px 12px; border-radius: 10px; background: var(--green-light); }
