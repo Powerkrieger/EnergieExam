@@ -55,6 +55,8 @@ button.small { min-height: 30px; padding: 2px 10px; font-size: 0.85rem; }
 button.link { background: none; border: none; padding: 4px 0; min-height: 0; color: var(--green); text-decoration: underline; }
 .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
 .buttons.spaced { justify-content: space-between; }
+.buttons .wide { flex-basis: 100%; }
+.buttons .push-right { margin-left: auto; }
 .file-button input { display: none; }
 .file-button.disabled { opacity: 0.5; pointer-events: none; }
 input[type="search"], input[type="text"], textarea, select {
@@ -120,7 +122,8 @@ button.mark.on { background: var(--amber-light); color: inherit; font-weight: 60
 .banner.wrong { background: var(--red-light); color: var(--red); font-weight: 600; }
 .banner.unknown { background: var(--amber-light); }
 .banner p { margin: 0 0 6px; }
-.next { width: 100%; margin-top: 8px; }
+.next { margin-top: 8px; }
+.next .primary { flex: 1; }
 
 .solution { border-top: 1px solid var(--border); margin-top: 12px; padding-top: 4px; }
 .solution p { margin: 4px 0; }

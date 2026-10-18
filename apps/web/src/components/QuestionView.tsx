@@ -24,9 +24,11 @@ interface Props {
   onNext?: () => void;
   /** Offers to skip the question without answering it. */
   onSkip?: () => void;
+  /** Offers to go back to the previous question, e.g. a skipped one. */
+  onBack?: () => void;
 }
 
-export function QuestionView({ question: q, onResult, onNext, onSkip }: Props) {
+export function QuestionView({ question: q, onResult, onNext, onSkip, onBack }: Props) {
   const { docOf, record, settings, formulas, marks, toggleMark } = useStore();
   const marked = marks.has(q.key);
   const doc = docOf(q.key);
@@ -170,10 +172,11 @@ export function QuestionView({ question: q, onResult, onNext, onSkip }: Props) {
 
       {!checked ? (
         <div className="buttons spaced">
-          <button className="primary" onClick={check}>
+          <button className="primary wide" onClick={check}>
             {i.kind === "open" ? "Lösung anzeigen" : "Prüfen"}
           </button>
-          {onSkip && <button onClick={onSkip}>Überspringen →</button>}
+          {onBack && <button onClick={onBack}>← Zurück</button>}
+          {onSkip && <button className="push-right" onClick={onSkip}>Überspringen →</button>}
         </div>
       ) : (
         <ResultBanner overall={result.overall} verdict={verdict} onSelfAssess={finish} />
@@ -206,9 +209,12 @@ export function QuestionView({ question: q, onResult, onNext, onSkip }: Props) {
       )}
 
       {checked && onNext && (verdict !== null || result.overall !== null) && (
-        <button className="primary next" onClick={onNext}>
-          Weiter
-        </button>
+        <div className="buttons next">
+          {onBack && <button onClick={onBack}>← Zurück</button>}
+          <button className="primary" onClick={onNext}>
+            Weiter
+          </button>
+        </div>
       )}
 
       {settings.reviewMode && <ReviewPanel question={q} />}

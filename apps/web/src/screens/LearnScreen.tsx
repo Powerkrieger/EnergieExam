@@ -147,6 +147,7 @@ export function LearnScreen({ route }: { route: Route }) {
         onResult={(ok) => setResults((r) => ({ ...r, [q.key]: ok }))}
         onNext={() => setIndex((n) => n + 1)}
         onSkip={mode === "review" ? undefined : () => setIndex((n) => n + 1)}
+        onBack={mode === "review" || index === 0 ? undefined : () => setIndex((n) => n - 1)}
       />
       {mode === "review" && (
         <div className="buttons spaced">
