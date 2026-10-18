@@ -10,13 +10,13 @@ JSON file. This document is the checklist for both ends.
 |---|---|
 | Built | 2026-10-18, for the same reviewer (personal use only) |
 | Code | git tag `review-4` |
-| APK | `private/Energieberatung.apk`, SHA-256 `7f06f84cfab934ec26354a4ebf2eec07a99db2125bfc3265deb70bb675c98fa0` |
+| APK | `private/Energieberatung.apk`, SHA-256 `a073835f52a111015004433bd9ca4e7d34a557cb08f166a7c931cda8173b1d0b` |
 | Built with | `npm run android:private -w @exam/web` (PDFs from `private/pdfs` built in) |
 | Baseline | `annotations/review-baseline.json` (question hashes of that build) |
 
 New in this build: her review of all 733 WG questions bundled, and "← Zurück" while
 learning (her request): skipped questions can be answered, answered ones are shown with
-their result. Question hashes are the same as in `review-3`. Installs over `review-3`.
+their result. WG 1.1.1.12 shows a hint about the unit field missing in the original. Question hashes are the same as in `review-3`. Installs over `review-3`.
 
 ## Previous rounds
 
