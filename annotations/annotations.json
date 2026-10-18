@@ -220,7 +220,8 @@
           }
         ]
       },
-      "status": "confirmed"
+      "status": "confirmed",
+      "hint": "Im Original fehlt bei der Wärmeleitfähigkeit (λ) das Auswahlfeld für die Einheit. Die richtige Einheit steht in der Lösung."
     },
     "WG/1.1.1.13": {
       "hash": "9f4ae2b03d0f0951",

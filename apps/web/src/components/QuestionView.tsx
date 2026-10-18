@@ -116,6 +116,7 @@ export function QuestionView({ question: q, attempt, onAttempt, onResult, onNext
       <button className="link small" onClick={() => setShowOriginal(!showOriginal)}>
         {showOriginal ? "Als Text anzeigen" : "Frage im Original anzeigen"}
       </button>
+      {q.annotation?.hint && !q.stale && <p className="banner unknown small">Hinweis: {q.annotation.hint}</p>}
 
       <section className="interaction">
         {i.kind === "single" && (

@@ -14,7 +14,10 @@ export interface QuestionAnnotation {
   answer?: AnswerOverride;
   /** Linked rows of the Formelsammlung (FormulaEntry ids). */
   formulas?: string[];
+  /** The reviewer's note to us. */
   note?: string;
+  /** Shown to learners, e.g. about a defect in BAFA's question. Ours, not the reviewer's. */
+  hint?: string;
   reviewedAt?: string;
 }
 
@@ -44,9 +47,19 @@ export function parseAnnotationFile(json: unknown): AnnotationFile {
   return f as AnnotationFile;
 }
 
-/** Later layers win per question (e.g. bundled file, then the reviewer's local changes). */
+/**
+ * Later layers win per question (e.g. bundled file, then the reviewer's local changes).
+ * A hint survives a later layer without one, since reviews don't carry hints.
+ */
 export function mergeAnnotations(...layers: Record<string, QuestionAnnotation>[]): Record<string, QuestionAnnotation> {
-  return Object.assign({}, ...layers);
+  const merged: Record<string, QuestionAnnotation> = {};
+  for (const layer of layers) {
+    for (const [key, a] of Object.entries(layer)) {
+      const hint = a.hint ?? merged[key]?.hint;
+      merged[key] = hint === undefined ? a : { ...a, hint };
+    }
+  }
+  return merged;
 }
 
 export interface AnnotatedQuestion extends Question {

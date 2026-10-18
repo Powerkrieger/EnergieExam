@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyAnnotation } from "../src/annotations.ts";
+import { applyAnnotation, mergeAnnotations } from "../src/annotations.ts";
 import { suggestFormulas } from "../src/formulas.ts";
 import type { FormulaIndex, Question } from "../src/model.ts";
 import { isDue, recordResult } from "../src/progress.ts";
@@ -95,6 +95,17 @@ describe("annotations", () => {
     const a = applyAnnotation(q, { hash: "old", answer: { kind: "gaps", gaps: [{ correct: 1 }, null] } });
     expect(a.stale).toBe(true);
     expect(a.interaction).toBe(q.interaction);
+  });
+
+  it("keeps our hint when a later review replaces the annotation", () => {
+    const merged = mergeAnnotations(
+      { "WG/1.1.1.01": { hash: "h1", hint: "Feld fehlt" }, "WG/1.1.1.02": { hash: "h2", note: "alt" } },
+      { "WG/1.1.1.01": { hash: "h1", status: "confirmed" }, "WG/1.1.1.02": { hash: "h2", status: "wrong" } },
+    );
+    expect(merged).toEqual({
+      "WG/1.1.1.01": { hash: "h1", status: "confirmed", hint: "Feld fehlt" },
+      "WG/1.1.1.02": { hash: "h2", status: "wrong" },
+    });
   });
 });
 
