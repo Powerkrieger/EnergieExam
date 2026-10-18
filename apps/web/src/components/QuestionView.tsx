@@ -17,8 +17,20 @@ import { PdfRegion } from "./PdfRegion.tsx";
 import { ReviewPanel } from "./ReviewPanel.tsx";
 import { RichText } from "./RichText.tsx";
 
+/** A checked answer, kept so the question can be shown again as answered. */
+export interface Attempt {
+  response: Response;
+  result: Grade;
+  /** The final verdict; null while an open question awaits self-assessment. */
+  verdict: boolean | null;
+}
+
 interface Props {
   question: AnnotatedQuestion;
+  /** An earlier answer of this session: shows the question as answered instead of blank. */
+  attempt?: Attempt;
+  /** Called whenever the answer is checked or self-assessed. */
+  onAttempt?: (a: Attempt) => void;
   /** Called once the learner's result is known (graded or self-assessed). */
   onResult?: (right: boolean) => void;
   onNext?: () => void;
@@ -28,37 +40,39 @@ interface Props {
   onBack?: () => void;
 }
 
-export function QuestionView({ question: q, onResult, onNext, onSkip, onBack }: Props) {
+export function QuestionView({ question: q, attempt, onAttempt, onResult, onNext, onSkip, onBack }: Props) {
   const { docOf, record, settings, formulas, marks, toggleMark } = useStore();
   const marked = marks.has(q.key);
   const doc = docOf(q.key);
-  const [response, setResponse] = useState<Response>(() => emptyResponse(q));
-  const [result, setResult] = useState<Grade | null>(null);
-  const [verdict, setVerdict] = useState<boolean | null>(null);
+  const [response, setResponse] = useState<Response>(() => attempt?.response ?? emptyResponse(q));
+  const [result, setResult] = useState<Grade | null>(attempt?.result ?? null);
+  const [verdict, setVerdict] = useState<boolean | null>(attempt?.verdict ?? null);
   const [showOriginal, setShowOriginal] = useState(!!q.preferOriginal?.body);
   const [showSolutionOriginal, setShowSolutionOriginal] = useState(!!q.preferOriginal?.solution);
 
-  // Reset when moving to another question.
+  // Reset when moving to another question, or restore its earlier answer.
   useEffect(() => {
-    setResponse(emptyResponse(q));
-    setResult(null);
-    setVerdict(null);
+    setResponse(attempt?.response ?? emptyResponse(q));
+    setResult(attempt?.result ?? null);
+    setVerdict(attempt?.verdict ?? null);
     setShowOriginal(!!q.preferOriginal?.body);
     setShowSolutionOriginal(!!q.preferOriginal?.solution);
   }, [q.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checked = result !== null;
 
-  const finish = (right: boolean) => {
+  const finish = (g: Grade, right: boolean) => {
     setVerdict(right);
     record(q.key, right);
     onResult?.(right);
+    onAttempt?.({ response, result: g, verdict: right });
   };
 
   const check = () => {
     const g = grade(q, response);
     setResult(g);
-    if (g.overall !== null) finish(g.overall);
+    if (g.overall !== null) finish(g, g.overall);
+    else onAttempt?.({ response, result: g, verdict: null });
   };
 
   const i = q.interaction;
@@ -179,7 +193,7 @@ export function QuestionView({ question: q, onResult, onNext, onSkip, onBack }: 
           {onSkip && <button className="push-right" onClick={onSkip}>Überspringen →</button>}
         </div>
       ) : (
-        <ResultBanner overall={result.overall} verdict={verdict} onSelfAssess={finish} />
+        <ResultBanner overall={result.overall} verdict={verdict} onSelfAssess={(right) => finish(result, right)} />
       )}
 
       {checked && (

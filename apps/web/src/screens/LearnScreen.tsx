@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { QuestionView } from "../components/QuestionView.tsx";
+import { type Attempt, QuestionView } from "../components/QuestionView.tsx";
 import { type CatalogId, useCatalog } from "../components/CatalogSwitch.tsx";
 import { ReviewNextStep } from "../components/ReviewNextStep.tsx";
 import { href, type Route } from "../router.ts";
@@ -49,9 +49,12 @@ export function LearnScreen({ route }: { route: Route }) {
   const [index, setIndex] = useState(0);
   /** Latest result per question of this session; skipped questions have none. */
   const [results, setResults] = useState<Record<string, boolean>>({});
+  /** Answers of the current round, so going back shows them instead of a blank question. */
+  const [attempts, setAttempts] = useState<Record<string, Attempt>>({});
   const startRepeat = (k: string[]) => {
     setRepeat(k);
     setIndex(0);
+    setAttempts({});
   };
 
   const q = store.byKey.get(keys[index] ?? "");
@@ -144,6 +147,8 @@ export function LearnScreen({ route }: { route: Route }) {
       )}
       <QuestionView
         question={q}
+        attempt={attempts[q.key]}
+        onAttempt={(a) => setAttempts((m) => ({ ...m, [q.key]: a }))}
         onResult={(ok) => setResults((r) => ({ ...r, [q.key]: ok }))}
         onNext={() => setIndex((n) => n + 1)}
         onSkip={mode === "review" ? undefined : () => setIndex((n) => n + 1)}
