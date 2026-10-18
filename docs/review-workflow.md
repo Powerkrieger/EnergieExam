@@ -4,27 +4,28 @@ The answer keys are derived from BAFA's sample solutions and need a subject-matt
 expert's check. The reviewer gets a private APK, reviews in the app and sends back a
 JSON file. This document is the checklist for both ends.
 
-## Current round: `review-3`
+## Current round: `review-4`
 
 | | |
 |---|---|
-| Built | 2026-10-10, for the same reviewer (personal use only) |
-| Code | git tag `review-3` |
-| APK | `private/Energieberatung.apk`, SHA-256 `4ea34f0ec159e18b906d00d0652d1d2679aa6294dc1a4630e41c84a3ca4ff19f` |
+| Built | 2026-10-18, for the same reviewer (personal use only) |
+| Code | git tag `review-4` |
+| APK | `private/Energieberatung.apk`, SHA-256 `7f06f84cfab934ec26354a4ebf2eec07a99db2125bfc3265deb70bb675c98fa0` |
 | Built with | `npm run android:private -w @exam/web` (PDFs from `private/pdfs` built in) |
 | Baseline | `annotations/review-baseline.json` (question hashes of that build) |
 
-New in this build: true/false statements are answered with two buttons instead of a
-dropdown. Three questions that had swallowed the next one are split (WG 3.3.09/3.3.10,
-WG 3.6.3.23/3.6.3.24, NWG 3.2.3.11/3.2.3.12); her review of WG 3.3.09 was split
-accordingly. Installs over `review-2`.
-
-Exports made with `review-2` may contain reviews of WG 3.3.09, WG 3.6.3.23 or
-NWG 3.2.3.11 with the old hashes. `merge-reviews` reports them as mismatches; migrate
-them by hand: the first statements keep their positions, the rest belong to the split-off
-question.
+New in this build: her review of all 733 WG questions bundled, and "← Zurück" while
+learning (her request): skipped questions can be answered, answered ones are shown with
+their result. Question hashes are the same as in `review-3`. Installs over `review-3`.
 
 ## Previous rounds
+
+`review-3` (handed out 2026-10-10, APK now `private/Energieberatung-review-3.apk`,
+SHA-256 `4ea34f0ec159e18b906d00d0652d1d2679aa6294dc1a4630e41c84a3ca4ff19f`): true/false
+statements answered with two buttons; WG 3.3.09/3.3.10, WG 3.6.3.23/3.6.3.24 and
+NWG 3.2.3.11/3.2.3.12 split. Her export of 2026-10-18 (all WG questions) still had
+reviews of WG 3.3.09 and 3.6.3.23 with the pre-split hashes; they were migrated by hand.
+
 
 `review-2` (handed out 2026-10-09, APK now `private/Energieberatung-review-2.apk`,
 SHA-256 `5beefb0760a3ca1710c25f7bc40975d9ad46f106e7553067ef725e40c9aeecaa`): her
