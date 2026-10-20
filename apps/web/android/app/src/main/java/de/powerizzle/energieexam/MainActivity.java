@@ -1,4 +1,4 @@
-package de.energieberatung.pruefungstrainer;
+package de.powerizzle.energieexam;
 
 import com.getcapacitor.BridgeActivity;
 

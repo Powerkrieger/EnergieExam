@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Energieberatung</string>
     <string name="title_activity_main">Energieberatung</string>
-    <string name="package_name">de.energieberatung.pruefungstrainer</string>
-    <string name="custom_url_scheme">de.energieberatung.pruefungstrainer</string>
+    <string name="package_name">de.powerizzle.energieexam</string>
+    <string name="custom_url_scheme">de.powerizzle.energieexam</string>
 </resources>

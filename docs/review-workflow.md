@@ -87,6 +87,11 @@ the hash changes and the app silently ignores that review. Therefore:
   with `~/.android/debug.keystore`. With the same key, the new APK installs **over** the
   old one and her local reviews stay. Tell her **not** to uninstall first. If the key is
   lost, ask her to export before installing.
+- The app ID changed after `review-4` (to `de.powerizzle.energieexam`). The next build
+  installs **next to** her old app instead of over it: ask her to export her reviews from
+  the old app first, merge them, and only then uninstall the old app.
+- After an `android:private` build, run `./gradlew clean` before a public build.
+  Otherwise Gradle reuses the old APK and keeps the PDFs' space in it (73 MB instead of 7 MB).
 - After merging, her reviews are also bundled in the app. Local reviews still win.
 - Record the round: `git tag review-N`, then
   `npm run import -- baseline review-N private/pdfs/*.pdf`, and update the table above.
