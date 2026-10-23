@@ -5,3 +5,4 @@ apps/web/public/pdfjs/
 *.jks
 keystore.jks
 energieexam-release.properties
+*-release.env
