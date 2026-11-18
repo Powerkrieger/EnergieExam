@@ -1,6 +1,6 @@
 import type { AnnotatedQuestion, Question } from "@exam/core";
 import { describe, expect, it } from "vitest";
-import { reviewStep, SAMPLE, selectQuestions } from "../src/selection.ts";
+import { repeatByChapter, reviewStep, SAMPLE, selectQuestions } from "../src/selection.ts";
 
 const question = (n: number, priority: number): AnnotatedQuestion =>
   ({ key: `WG/${n}`, hash: "h", priority }) as unknown as Question;
@@ -56,5 +56,17 @@ describe("learning sessions", () => {
   it("collects the questions marked as difficult", () => {
     expect(selectQuestions(qs, {}, "marked", { marks: new Set(["WG/3", "WG/1"]) })).toEqual(["WG/1", "WG/3"]);
     expect(selectQuestions(qs, {}, "marked", {})).toEqual([]);
+  });
+
+  it("splits wrong and difficult questions by chapter, so they can be repeated in small batches", () => {
+    const inChapter = (n: number, chapter: string) => ({ ...question(n, 0), chapter }) as AnnotatedQuestion;
+    const qs = [inChapter(1, "1.1"), inChapter(2, "1.1"), inChapter(3, "1.2"), inChapter(4, "1.3"), inChapter(5, "1.3")];
+    const wrong = { box: 0, seen: 1, right: 0, last: "wrong", lastAt: 0, dueAt: 0 } as const;
+    const progress = { "WG/1": wrong, "WG/2": wrong, "WG/5": wrong };
+    expect(repeatByChapter(qs, progress, new Set(["WG/2", "WG/4"]))).toEqual([
+      { chapter: "1.1", count: { wrong: 2, marked: 1 } },
+      { chapter: "1.3", count: { wrong: 1, marked: 1 } },
+    ]);
+    expect(selectQuestions(qs, progress, "wrong", { chapter: "1.3" })).toEqual(["WG/5"]);
   });
 });

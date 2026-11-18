@@ -72,6 +72,9 @@ input[type="search"] { width: 100%; margin: 8px 0; }
 .bar > div { height: 100%; background: var(--green); }
 .chapters { padding-left: 1.2rem; }
 .chapters li { margin: 4px 0; }
+.repeat-part + .repeat-part { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 4px; }
+.repeat-part h3 { font-size: 1rem; margin: 8px 0 0; }
+.repeat-links { display: inline-flex; gap: 12px; margin-left: 8px; white-space: nowrap; }
 
 .session-head { display: flex; justify-content: space-between; margin: 10px 0; font-weight: 600; }
 

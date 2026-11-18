@@ -59,6 +59,33 @@ export function sampleDone(questions: AnnotatedQuestion[], priority: (key: strin
   return questions.filter((q) => priority(q.key) === 1 && reviewed(q)).length;
 }
 
+export interface RepeatCount {
+  wrong: number;
+  marked: number;
+}
+
+/**
+ * Wrong and difficult questions per chapter, in catalogue order; chapters with
+ * neither are left out, so the learner can repeat them in small batches.
+ */
+export function repeatByChapter(
+  qs: AnnotatedQuestion[],
+  progress: Record<string, QuestionProgress>,
+  marks: Set<string>,
+): { chapter: string; count: RepeatCount }[] {
+  const byChapter = new Map<string, RepeatCount>();
+  for (const q of qs) {
+    const wrong = progress[q.key]?.last === "wrong";
+    const marked = marks.has(q.key);
+    if (!wrong && !marked) continue;
+    const c = byChapter.get(q.chapter) ?? { wrong: 0, marked: 0 };
+    if (wrong) c.wrong++;
+    if (marked) c.marked++;
+    byChapter.set(q.chapter, c);
+  }
+  return [...byChapter].map(([chapter, count]) => ({ chapter, count }));
+}
+
 const SESSION = 20;
 
 /** Question keys for a learning or review session. */
