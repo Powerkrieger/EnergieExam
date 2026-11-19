@@ -14,6 +14,7 @@ import {
 import { detectDocument, importCatalog, importFormulas } from "@exam/importer";
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import bundled from "../../../annotations/annotations.json";
+import { createBackup, mergeBackup, parseBackup, type ProgressBackup } from "./backup.ts";
 import * as db from "./db.ts";
 import { forgetDocs, openPdf, pdfjs } from "./pdf.ts";
 import { reviewPriority } from "./selection.ts";
@@ -60,6 +61,9 @@ interface Store extends Data {
   updateSettings(s: Partial<db.Settings>): void;
   exportReviews(): AnnotationFile;
   importReviews(json: unknown): number;
+  exportProgress(): Promise<ProgressBackup>;
+  /** Merges a progress backup; returns how many answers and marks it changed. */
+  importProgress(json: unknown): Promise<{ progress: number; marks: number }>;
   resetProgress(): void;
 }
 
@@ -194,6 +198,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setData((d) => d && { ...d, reviews: { ...d.reviews, ...file.questions } });
         for (const [k, a] of entries) void db.saveReview(k, a);
         return entries.length;
+      },
+
+      async exportProgress() {
+        return createBackup(data.progress, await db.loadMarks());
+      },
+
+      async importProgress(json) {
+        const { progress, marks } = mergeBackup(data, parseBackup(json));
+        await db.saveBackup(progress, marks);
+        setData(
+          (d) =>
+            d && {
+              ...d,
+              progress: { ...d.progress, ...progress },
+              marks: new Set([...d.marks, ...Object.keys(marks)]),
+            },
+        );
+        return { progress: Object.keys(progress).length, marks: Object.keys(marks).length };
       },
 
       resetProgress() {

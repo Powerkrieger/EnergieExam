@@ -99,6 +99,22 @@ export async function saveMark(key: string, marked: boolean) {
   else await d.delete("marks", key);
 }
 
+/** Marked questions with the time they were marked. */
+export async function loadMarks(): Promise<Record<string, number>> {
+  const d = await db;
+  const [keys, values] = await Promise.all([d.getAllKeys("marks"), d.getAll("marks")]);
+  return Object.fromEntries(keys.map((k, i) => [k, values[i]!]));
+}
+
+/** Stores progress and marks from a backup in one transaction. */
+export async function saveBackup(progress: Record<string, QuestionProgress>, marks: Record<string, number>) {
+  const d = await db;
+  const tx = d.transaction(["progress", "marks"], "readwrite");
+  for (const [k, p] of Object.entries(progress)) void tx.objectStore("progress").put(p, k);
+  for (const [k, t] of Object.entries(marks)) void tx.objectStore("marks").put(t, k);
+  await tx.done;
+}
+
 export async function saveSettings(s: Settings) {
   await (await db).put("settings", s, "settings");
 }
